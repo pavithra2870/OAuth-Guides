@@ -1,0 +1,419 @@
+{
+ "summary": "Registering a GitHub OAuth app is a self-serve process that provides immediate API credentials for user-on-behalf-of actions. The primary complexity involves managing organization-level access, which often requires explicit approval from organization owners.",
+ "difficulty": {
+  "level": "easy",
+  "headline": "Registration is instant and self-serve, though organization data access may require manual owner approval.",
+  "factors": [
+   {
+    "label": "Self-Serve Registration",
+    "detail": "Credentials like the Client ID and Secret are issued immediately upon form submission without a mandatory platform review.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S6"
+     ],
+     "quote": "A registered OAuth application is assigned a unique Client ID and Client Secret.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Organization Restrictions",
+    "detail": "Access to private organization data is blocked by default if the organization has access restrictions enabled.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S8"
+     ],
+     "quote": "When OAuth app access restrictions are enabled, organization members and outside collaborators cannot authorize OAuth app access",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Developers can immediately use their Client ID and Secret to authorize their own account or other users, provided they are not accessing restricted organization data.",
+  "evidence": {
+   "source_ids": [
+    "S4"
+   ],
+   "quote": "If you want to skip authorizing your app in the standard way, such as when testing your app, you can use the non-web application flow.",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Verified Email Address",
+   "detail": "The GitHub account owner must have a verified email to authorize or create apps.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "Application Name",
+   "detail": "A public-facing name for the application.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "In \"Application name\", type the name of your app.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Homepage URL",
+   "detail": "The full URL to your application's website.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "In \"Homepage URL\", type the full URL to your app's website.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Authorization Callback URL",
+   "detail": "The redirect URI where users are sent after authorization.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "In \"Authorization callback URL\", type the callback URL of your app.",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Draft App Metadata",
+   "detail": "Prepare the application name, homepage URL, and a list of up to 10 callback URLs.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft a public-facing application name, description, and a list of standard redirect URIs for the developer to copy-paste.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "You can enter up to 10 callback URLs. To add additional callback URLs, click Add callback URL.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Navigate to Developer Settings",
+   "detail": "Access the OAuth app registration area within your GitHub account settings.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 2.0,
+    "high": 5.0,
+    "unit": "minutes"
+   },
+   "link": "https://github.com/settings/developers",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "In the left sidebar, click Developer settings.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Register the Application",
+   "detail": "Fill in the application details and click 'Register application' to generate your credentials.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide a checklist of required fields (Name, Homepage, Callback) to ensure the developer has all data ready before clicking.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Click Register application.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Configure Token Expiration",
+   "detail": "Enable or disable short-lived tokens. GitHub recommends short-lived tokens for better security.",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 1.0,
+    "high": 2.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft a brief explanation of why expiring tokens (8-hour access, 6-month refresh) are recommended for the agent's security posture.",
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": "The access token expires after eight hours, and the refresh token expires after six months without use.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Request Organization Approval",
+   "detail": "If the app needs to access organization data, members must request approval from the organization owner.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 1.0,
+    "high": 7.0,
+    "unit": "days"
+   },
+   "link": null,
+   "agent_assist": "Draft a justification message for the organization owner explaining why the app requires access to organization resources.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Users can request owner approval for OAuth apps they'd like to use, and organization owners receive a notification of pending requests.",
+    "level": "documented"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Token Issuance Limits",
+   "detail": "GitHub limits the number of tokens issued per user/app/scope combination; exceeding this revokes older tokens.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "There is a limit of ten tokens that are issued per user/application/scope combination",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Implicit Scope Normalization",
+   "detail": "Requesting a broad scope (like 'user') will automatically include and normalize narrower scopes (like 'user:email').",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "the token will be saved with a normalized list of scopes, discarding those that are implicitly included by another requested scope.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Organization Access Restrictions",
+   "detail": "New organizations have access restrictions enabled by default, blocking unapproved OAuth apps from private data.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "When you create a new organization, OAuth app access restrictions are enabled by default.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "Organization Owner Denial",
+   "why": "Owners can deny any third-party access request to protect organization resources.",
+   "fix": "Contact the organization owner directly to discuss the app's security and data requirements.",
+   "evidence": {
+    "source_ids": [
+     "S3"
+    ],
+    "quote": "When an organization member or outside collaborator requests OAuth app access to organization resources, organization owners can approve or deny the request.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "SAML SSO Session Expiry",
+   "why": "Organizations with SAML enabled require an active session for OAuth authorization to succeed.",
+   "fix": "The user must log in to the organization via SAML before attempting to authorize the OAuth app.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "you must have an active SAML session for each organization each time you authorize an OAuth app.",
+    "level": "documented"
+   }
+  }
+ ],
+ "uncertain": [
+  "The exact duration for organization owner approval as it depends on internal company policies.",
+  "Whether the 100-app limit per user/org is strictly enforced or can be increased upon request.",
+  "The specific review time for Marketplace listings, though community sources suggest 2-4 weeks."
+ ],
+ "slug": "github",
+ "app_name": "GitHub",
+ "domain": "github.com",
+ "composio": {
+  "status": "managed",
+  "name": "GitHub",
+  "slug": "GITHUB",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app",
+   "title": "Creating an OAuth app - GitHub Docs",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://github.com/palantir/policy-bot",
+   "title": "GitHub - palantir/policy-bot: A GitHub App that enforces approval policies on pull requests · GitHub",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/approving-oauth-apps-for-your-organization",
+   "title": "Approving OAuth apps for your organization - GitHub Docs",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps",
+   "title": "Authorizing OAuth apps - GitHub Docs",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps",
+   "title": "Authorizing OAuth apps - GitHub Docs",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://github.com/github/developer.github.com/blob/master/content/v3/oauth.md",
+   "title": "developer.github.com/content/v3/oauth.md at master · github/developer.github.com · GitHub",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://github.com/FindMalek/sonaraem/issues/390",
+   "title": "Spotify caps allowlist ADD calls to 5 per 24h (app-wide) — breaks the login-slot/rotation-pool churn model · Issue #390 · FindMalek/sonaraem · GitHub",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/about-oauth-app-access-restrictions",
+   "title": "About OAuth app access restrictions - GitHub Docs",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://github.com/orgs/community/discussions/210534",
+   "title": "How long does the GitHub Marketplace app review process typically take? · community · Discussion #210534 · GitHub",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://github.com/microsoftconnect/ms-intune-app-sdk-ios/discussions/569",
+   "title": "App Registration Requirement Will be Enforced in Version 21.0.0+ · microsoftconnect/ms-intune-app-sdk-ios · Discussion #569 · GitHub",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Draft App Metadata",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s2",
+    "label": "Navigate to Developer Settings",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 2,
+    "max_minutes": 5
+   },
+   {
+    "step_id": "s3",
+    "label": "Register the Application",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s4",
+    "label": "Configure Token Expiration",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 1,
+    "max_minutes": 2
+   },
+   {
+    "step_id": "s5",
+    "label": "Request Organization Approval",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 1440,
+    "max_minutes": 10080
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 13,
+   "max_minutes": 27
+  },
+  "waiting": {
+   "min_minutes": 1440,
+   "max_minutes": 10080
+  },
+  "agent_share": 0.37
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 16,
+   "reported": 0,
+   "inferred": 1
+  },
+  "confidence": "high",
+  "unverified": [
+   "Verified Email Address"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:40:09+00:00",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview",
+  "queries": [
+   "GitHub API OAuth 2.0 register developer app credentials",
+   "GitHub OAuth app review approval requirements production access",
+   "GitHub developer app approval how long review rejected",
+   "GitHub API scopes verification requirements developer policy",
+   "GitHub app review process how long it takes extended quota production access",
+   "GitHub app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

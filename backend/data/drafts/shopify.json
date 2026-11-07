@@ -1,0 +1,566 @@
+{
+ "summary": "Registering a Shopify public OAuth app requires creating a Partner account, configuring API access scopes, and building mandatory GDPR webhook endpoints. While credentials are generated immediately for testing on development stores, public listing and multi-store deployment require passing a manual Shopify App Review process.",
+ "difficulty": {
+  "level": "hard",
+  "headline": "Public apps must adhere to strict platform requirements, implement mandatory billing/GDPR endpoints, and pass a manual review process that has a backlogged queue.",
+  "factors": [
+   {
+    "label": "Strict App Review & Queue Penalties",
+    "detail": "App submissions are manually reviewed against platform guidelines, and fixing rejections sends your app back to the end of the review queue.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S9"
+     ],
+     "quote": "Every submission goes through the same review process, and our team is working through the backlog.",
+     "level": "reported"
+    }
+   },
+   {
+    "label": "Mandatory Compliance Endpoints",
+    "detail": "All public apps must implement and expose functional GDPR mandatory webhooks (customer data request, customer data erasure, and shop data erasure).",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S10"
+     ],
+     "quote": "Shopify requires all public apps to handle GDPR compliance webhooks.",
+     "level": "reported"
+    }
+   },
+   {
+    "label": "Session Token Requirements",
+    "detail": "Embedded apps must use session tokens instead of relying on third-party cookies or local storage.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S3"
+     ],
+     "quote": "Your embedded app must function properly without relying on third-party cookies or local storage, including when accessed in incognito mode on Chrome.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Developers can immediately obtain API credentials upon creating an app and install it on development stores to build and test functionality before submitting for review.",
+  "evidence": {
+   "source_ids": [
+    "S6"
+   ],
+   "quote": "Development stores can be used to test apps to ensure they're free of bugs or otherwise incomplete.",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Shopify Partner Account",
+   "detail": "A free Shopify Partner account is required to access the Dev Dashboard and register OAuth apps.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "All new apps must be created via the Shopify Dev Dashboard or Partner Dashboard.",
+    "level": "reported"
+   }
+  },
+  {
+   "label": "Development Store",
+   "detail": "A development store under your Partner account is needed to test app installation, OAuth flow, and functionality.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Development stores can be used to test apps to ensure they're free of bugs or otherwise incomplete.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "GDPR Compliance Webhook Endpoints",
+   "detail": "Public endpoints to receive customer data request, customer data erasure, and shop data erasure notifications.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Shopify requires all public apps to handle GDPR compliance webhooks.",
+    "level": "reported"
+   }
+  },
+  {
+   "label": "HTTPS Redirection URL",
+   "detail": "A secure callback URI to receive OAuth authorization codes during authentication.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Create a Shopify Partner Account",
+   "detail": "Sign up for a free Shopify Partner account to access the Dev Dashboard where app registrations are managed.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": "https://partners.shopify.com/signup",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "All new apps must be created via the Shopify Dev Dashboard or Partner Dashboard.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Create a Development Store",
+   "detail": "Set up a development store within your Partner account to serve as a sandbox environment for testing installation and API calls.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Development stores can be used to test apps to ensure they're free of bugs or otherwise incomplete.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Register App & Obtain Credentials",
+   "detail": "Create a new app entry in the Dev Dashboard to generate the Client ID (SHOPIFY_API_KEY) and Client Secret (SHOPIFY_API_SECRET).",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft the app configuration options, app name (avoiding restricted terms like 'Shopify'), and specify the App URL and callback redirection URIs.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Your app's client credentials consist of a client ID and a client secret.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Configure Scopes and GDPR Webhooks",
+   "detail": "Declare necessary API access scopes and configure mandatory GDPR webhook URLs (customer data request, customer data erasure, shop data erasure).",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Prepare the minimum required scope list (e.g. read_products, read_orders) with justifications, and generate configuration for GDPR endpoints.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Request only the data your app needs to function.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Test OAuth Flow & App Lifecycle on Dev Store",
+   "detail": "Install the app on your development store. Test the full OAuth authorization code flow, session token validation, and uninstall/reinstall routines.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 1.0,
+    "high": 3.0,
+    "unit": "hours"
+   },
+   "link": null,
+   "agent_assist": "Draft a comprehensive testing checklist covering installation, re-authentication, billing flow, and webhook handling.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Make sure you thoroughly test installing, uninstalling, and reinstalling your app, as this tripped us up several times.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Draft Listing Page and Review Submissions",
+   "detail": "Prepare the public app listing content, key benefit summaries, app screenshots, demo store details, and testing instructions for the review team.",
+   "owner": "agent",
+   "phase": "submit",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft app listing copy (tagline, key benefits, feature descriptions), reviewer instructions, and screencast scripts.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "The app listing page is technically your only sales pitch to the merchant.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "Submit App for Review",
+   "detail": "Submit the completed app configuration, listing form, and test instructions in the Partner Dashboard for Shopify App Review.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide a pre-submission verification checklist ensuring all requirements, test credentials, and billing rules are satisfied.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "The app review team will only review production-ready apps.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s8",
+   "title": "Provider App Review",
+   "detail": "Shopify's App Review team evaluates your app submission against platform quality standards. Note: review times vary depending on backlog (no official figure provided).",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 2.0,
+    "high": 6.0,
+    "unit": "weeks"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Every submission goes through the same review process, and our team is working through the backlog.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s9",
+   "title": "Publish App to Shopify App Store",
+   "detail": "Once approved by the review team, approve the final listing version and publish your app to make it available to merchants.",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Resubmission Resets Review Queue Position",
+   "detail": "If your app is rejected during review, submitting a fix places your app at the back of the queue, significantly increasing overall wait time.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Every submission goes through the same review process, and our team is working through the backlog.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "60-Day Historical Order Window Restriction",
+   "detail": "By default, order access scopes only grant data for the last 60 days. Requesting historical data requires approval for the read_all_orders scope.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "title": "Repeated Failures Risk Suspension",
+   "detail": "Submitting apps with unresolved bugs repeatedly can result in temporary partner account suspension.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Apps that repeatedly fail review may be subject to a temporary suspension.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "Exposing Client Secret in Client-Side Code",
+   "detail": "The Client Secret must remain strictly server-side and should never be committed to version control or included in frontend client bundles.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Never commit credentials to version control.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "App URL fails to redirect to OAuth grant screen upon installation",
+   "why": "Shopify requires both the main App URL and allowed redirection URLs to seamlessly direct merchants to the OAuth consent page.",
+   "fix": "Verify that your application handles unauthenticated requests by initiating the OAuth flow and directing to Shopify's authorization URL.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "problem": "Rejection due to non-compliant billing integration",
+   "why": "Shopify requires all paid public apps or apps with charges to process payments via the Shopify Billing API or managed pricing.",
+   "fix": "Integrate Shopify's Billing API for all app subscription and usage charges rather than external payment processors.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "problem": "Reviewer unable to test features or access external accounts",
+   "why": "The review team requires valid test credentials and setup instructions to fully verify app functionality.",
+   "fix": "Provide working login credentials and step-by-step testing instructions in the submission notes.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "uncertain": [
+  "Exact SLA or calendar wait time for the Shopify App Review queue (sources note active backlogs and delays without a guaranteed timeframe).",
+  "Specific wait times for obtaining approval for protected customer data scopes."
+ ],
+ "slug": "shopify",
+ "app_name": "Shopify",
+ "domain": "shopify.com",
+ "composio": {
+  "status": "byo",
+  "name": "Shopify",
+  "slug": "SHOPIFY",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://shopify.dev/docs/apps/build/authentication-authorization/manage-credentials",
+   "title": "Manage your app credentials",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.shopify.com/partners/blog/developing-your-first-shopify-app",
+   "title": "Developing Your First Shopify App: 4 Mistakes to Avoid - Shopify",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://shopify.dev/docs/apps/launch/shopify-app-store/app-store-requirements",
+   "title": "App Store requirements",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://apps.shopify.com/approve-new-customers",
+   "title": "Addify ‑ Approve New Customers - Manually approve new customer accounts or registrations. | Shopify App Store",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.shopify.com/partners/blog/insights-shopify-app-review",
+   "title": "7 Insights From the Shopify App Review Team - Shopify",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://shopify.dev/docs/apps/launch/app-store-review/pass-app-review",
+   "title": "Pass app review",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://www.shopify.com/partners/terms",
+   "title": "Shopify Partner Program - Partner Program Agreement - Shopify",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://shopify.dev/docs/api/usage/access-scopes",
+   "title": "Shopify API access scopes",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://community.shopify.dev/t/longer-app-store-review-times-what-you-need-to-know/31728",
+   "title": "Longer App Store Review Times: What You Need to Know - Shopify App Store - Shopify Developer Community Forums",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://www.apideck.com/blog/how-to-create-a-shopify-public-oauth-app",
+   "title": "How to Create a Shopify Public OAuth App",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Create a Shopify Partner Account",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s2",
+    "label": "Create a Development Store",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s3",
+    "label": "Register App & Obtain Credentials",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s4",
+    "label": "Configure Scopes and GDPR Webhooks",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s5",
+    "label": "Test OAuth Flow & App Lifecycle on Dev Store",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 60,
+    "max_minutes": 180
+   },
+   {
+    "step_id": "s6",
+    "label": "Draft Listing Page and Review Submissions",
+    "owner": "agent",
+    "phase": "submit",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s7",
+    "label": "Submit App for Review",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s8",
+    "label": "Provider App Review",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 20160,
+    "max_minutes": 60480
+   },
+   {
+    "step_id": "s9",
+    "label": "Publish App to Shopify App Store",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 5,
+    "max_minutes": 15
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 140,
+   "max_minutes": 345
+  },
+  "waiting": {
+   "min_minutes": 20160,
+   "max_minutes": 60480
+  },
+  "agent_share": 0.3
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 10,
+   "reported": 8,
+   "inferred": 6
+  },
+  "confidence": "medium",
+  "unverified": [
+   "HTTPS Redirection URL",
+   "Publish App to Shopify App Store",
+   "60-Day Historical Order Window Restriction",
+   "App URL fails to redirect to OAuth grant screen upon installation",
+   "Rejection due to non-compliant billing integration",
+   "Reviewer unable to test features or access external accounts"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T08:24:49+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "Shopify API OAuth 2.0 register developer app credentials",
+   "Shopify OAuth app review approval requirements production access",
+   "Shopify developer app approval how long review rejected",
+   "Shopify API scopes verification requirements developer policy",
+   "Shopify app review process how long it takes extended quota production access",
+   "Shopify app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

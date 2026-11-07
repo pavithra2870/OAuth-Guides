@@ -1,0 +1,509 @@
+{
+ "summary": "Registering an app for Google Business Profile APIs requires creating a Google Cloud project, configuring OAuth credentials, and submitting an access application form to request quota. The main catch is that access is gated by a manual review process; project quota is locked at 0 Requests Per Minute (QPM) until Google approves the application, which typically takes 2 to 4+ weeks.",
+ "difficulty": {
+  "level": "gated",
+  "headline": "API access is gated by a mandatory manual application process, and API requests remain completely blocked at 0 QPM quota until Google grants approval.",
+  "factors": [
+   {
+    "label": "Zero Quota Lock",
+    "detail": "Enabling Business Profile APIs leaves your project with a 0 QPM quota limit, preventing any testing or live API calls until manual approval.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S3",
+      "S5"
+     ],
+     "quote": "A quota of 0 QPM means the project has not yet been approved, while 300 QPM indicates that access has been approved.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Extended Review Wait",
+    "detail": "Standard review times are quoted at 14 days, but high application volume frequently pushes waiting periods past 3 to 4 weeks.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S5"
+     ],
+     "quote": "Google states that Business Profile API access requests are normally reviewed within 14 days.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Account Eligibility Requirement",
+    "detail": "Applicants must maintain a verified Google Business Profile active for at least 60 days before applying for direct API access.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S10"
+     ],
+     "quote": "Manage a Google Business Profile that has been verified and active for at least 60 days.",
+     "level": "reported"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "no",
+  "detail": "Google Cloud projects configured with the Business Profile APIs default to 0 Requests Per Minute (0 QPM), blocking all API execution until the access application is explicitly approved by Google.",
+  "evidence": {
+   "source_ids": [
+    "S3",
+    "S5"
+   ],
+   "quote": "A quota of 0 QPM means the project has not yet been approved, while 300 QPM indicates that access has been approved.",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Google Cloud Project",
+   "detail": "A Google Cloud Console project with Business Profile APIs enabled.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Before using the API, you must configure your Google Cloud project, enable the Business Profile APIs, and set up OAuth credentials and the consent screen.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Verified Business Profile (60+ Days)",
+   "detail": "An active Google Business Profile managed by the applying entity for at least 60 days.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Manage a Google Business Profile that has been verified and active for at least 60 days.",
+    "level": "reported"
+   }
+  },
+  {
+   "label": "OAuth Consent Screen Metadata",
+   "detail": "Configured application name, logo, homepage, privacy policy link, and terms of service link.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1",
+     "S4"
+    ],
+    "quote": "From there, you can update the application name and the logo, as well as include a link to your terms of service and privacy policy.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "API Access Application Form",
+   "detail": "Submission of the official Google Business Profile API access and quota increase request form.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S2",
+     "S3",
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Configure Google Cloud Project and Enable APIs",
+   "detail": "Create or select a Google Cloud Project and enable the required Business Profile API services (such as My Business Account Management API and Business Profile Performance API).",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": "https://console.cloud.google.com",
+   "agent_assist": "Generate list of required Google Business Profile API service names and setup commands for Google Cloud Console.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Before using the API, you must configure your Google Cloud project, enable the Business Profile APIs, and set up OAuth credentials and the consent screen.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Configure OAuth Consent Screen and OAuth Client Credentials",
+   "detail": "In Google Cloud Console, configure the consent screen with application metadata and create an OAuth Client ID credential set.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": "https://console.developers.google.com/apis/credentials/consent",
+   "agent_assist": "Draft app name, description, privacy policy text outline, terms of service link format, authorized domain list, and requested scope list (https://www.googleapis.com/auth/business.manage).",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "From there, you can update the application name and the logo, as well as include a link to your terms of service and privacy policy.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Verify Account Eligibility Requirements",
+   "detail": "Ensure the applicant Google Account has managed a verified Google Business Profile active for at least 60 days and uses an email on a business domain.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Compile pre-application checklist verifying account age, profile verification status, domain email alignment, and required documentation.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Manage a Google Business Profile that has been verified and active for at least 60 days.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Submit Google Business Profile API Access Request Form",
+   "detail": "Fill out and submit Google's official access request form with your project ID, business use case details, target locations, and technical architecture.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": "https://docs.google.com/forms/d/1XTQc-QEjsE7YrgstyJxbFDnwmhUhBFFvpNJBw3VzuuE/viewform",
+   "agent_assist": "Draft clear use-case explanations, workflow architecture summaries, user consent mechanisms, and data protection descriptions to paste into the request form.",
+   "evidence": {
+    "source_ids": [
+     "S2",
+     "S3",
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Wait for Google Security Review and Quota Provisioning",
+   "detail": "Google reviews your access application. Reviews normally take 14 days but can take longer during high application volume. Do not submit duplicate applications while pending.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 2.0,
+    "high": 4.0,
+    "unit": "weeks"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Google states that Business Profile API access requests are normally reviewed within 14 days.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Provide Demo Account Upon Request",
+   "detail": "If requested by Google during review, provide a functioning live demo account of your application within 7 days to verify compliance with Google policies.",
+   "owner": "you",
+   "phase": "review",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft step-by-step demo instructions and test user walkthrough documentation for Google's reviewers.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Upon request from Google, you must provide a demo account to your API tool within seven days of the request.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "Verify Quota Provisioning and Enable Production Integration",
+   "detail": "Check your Google Cloud Console quota metrics to confirm the Business Profile API quota has increased from 0 QPM to 300 QPM.",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": "https://console.cloud.google.com",
+   "agent_assist": "Provide validation script to test API authorization tokens once quota reaches 300 QPM.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "A quota of 0 QPM means the project has not yet been approved, while 300 QPM indicates that access has been approved.",
+    "level": "documented"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Submitting Duplicate Applications Delays Approval",
+   "detail": "Submitting multiple access or quota request forms while an initial request is pending can reset your queue position or create conflicting support files.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Please note: Do not submit additional applications while your initial application is pending.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Failure to Provide Demo Account Causes Rejection",
+   "detail": "Google may request a live demo account during policy review. Failing to provide working credentials within 7 days constitutes a policy violation.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Upon request from Google, you must provide a demo account to your API tool within seven days of the request.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Indirect Third-Party API Access Prohibited",
+   "detail": "You cannot build wrapper APIs or share project credentials that allow end-clients or agencies to access Business Profile APIs programmatically without their own approved Cloud projects.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "You cannot provide indirect access to your Business Profile project.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "API Requests Fail with Quota Exceeded / Zero Quota Error",
+   "why": "The Google Cloud Project has enabled the APIs but Google has not yet approved the access application, keeping quota locked at 0 QPM.",
+   "fix": "Check project quota in Google Cloud Console. If it reads 0 QPM, your access request is still pending approval. Once approved, quota will show 300 QPM.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "A quota of 0 QPM means the project has not yet been approved, while 300 QPM indicates that access has been approved.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Application Status Stuck in 'In Progress' Past 14 Days",
+   "why": "Unusually high application volume at Google can extend review times past the standard 14-day window.",
+   "fix": "Do not submit duplicate access applications. Retain your original Case ID, monitor Cloud Console for 300 QPM, and post follow-ups in the official community with '[API]' in the title.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Please note: Do not submit additional applications while your initial application is pending.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Google Project Deactivated Due to Policy Non-Compliance",
+   "why": "Failure to follow third-party policies, failure to respond to demo account requests, or unauthorized programmatic modifications.",
+   "fix": "Correct the non-compliant policies or user access patterns in your software, then reapply using Google's official reapplication form.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "uncertain": [
+  "Exact response timeframes when API access reviews exceed the standard 14-day evaluation window.",
+  "Specific internal evaluation criteria used by Google reviewers when scoring use-case details submitted in the access form."
+ ],
+ "slug": "google-business-profile",
+ "app_name": "Google Business Profile",
+ "domain": "google.com",
+ "composio": {
+  "status": "byo",
+  "name": "Google Business Profile",
+  "slug": "GOOGLE_BUSINESS_PROFILE",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://developers.google.com/my-business/content/implement-oauth",
+   "title": "Implement OAuth with Business Profile APIs  |  Google Business Profile APIs  |  Google for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://developers.google.com/my-business/content/policies",
+   "title": "Google Business Profile APIs  |  Google for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://support.google.com/business/thread/222003029/business-profile-api-quota-increase-request-no-response-from-google?hl=en",
+   "title": "Business Profile API quota increase request - no response from Google - Google Business Profile Community",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://developers.google.com/my-business/content/oauth-setup",
+   "title": "OAuth setup  |  Google Business Profile APIs  |  Google for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://support.google.com/business/thread/460217725/api-business-profile-api-access-request-pending-for-more-than-three-weeks?hl=en",
+   "title": "[API] Business Profile API access request pending for more than three weeks - Google Business Profile Community",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "http://support.google.com/business/answer/10786874",
+   "title": "Product approval policies - Google Business Profile Help",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "http://support.google.com/business/answer/10786874?hl=en&ref_topic=11519175",
+   "title": "Product approval policies - Google Business Profile Help",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://support.google.com/business/answer/10786874?hl=en&ref_topic=11519175",
+   "title": "Product approval policies - Google Business Profile Help",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://discuss.google.dev/t/need-updated-guidance-on-google-business-profile-api-oauth-verification-quotas-and-multi-location-saas-integration/369138",
+   "title": "Need Updated Guidance on Google Business Profile API, OAuth Verification, Quotas, and Multi-Location SaaS Integration - Integration Services - Google Developer forums",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://localith.ai/blog/google-business-profile-api-guide",
+   "title": "Google Business Profile API: Setup & Examples",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Configure Google Cloud Project and Enable APIs",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s2",
+    "label": "Configure OAuth Consent Screen and OAuth Client Credentials",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s3",
+    "label": "Verify Account Eligibility Requirements",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s4",
+    "label": "Submit Google Business Profile API Access Request Form",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s5",
+    "label": "Wait for Google Security Review and Quota Provisioning",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 20160,
+    "max_minutes": 40320
+   },
+   {
+    "step_id": "s6",
+    "label": "Provide Demo Account Upon Request",
+    "owner": "you",
+    "phase": "review",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s7",
+    "label": "Verify Quota Provisioning and Enable Production Integration",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 5,
+    "max_minutes": 15
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 85,
+   "max_minutes": 170
+  },
+  "waiting": {
+   "min_minutes": 20160,
+   "max_minutes": 40320
+  },
+  "agent_share": 0.09
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 15,
+   "reported": 3,
+   "inferred": 3
+  },
+  "confidence": "high",
+  "unverified": [
+   "API Access Application Form",
+   "Submit Google Business Profile API Access Request Form",
+   "Google Project Deactivated Due to Policy Non-Compliance"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:41:27+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "Google Business Profile API OAuth 2.0 register developer app credentials",
+   "Google Business Profile OAuth app review approval requirements production access",
+   "Google Business Profile developer app approval how long review rejected",
+   "Google Business Profile API scopes verification requirements developer policy",
+   "Google Business Profile app review process how long it takes extended quota production access",
+   "Google Business Profile app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

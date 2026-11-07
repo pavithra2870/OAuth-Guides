@@ -1,0 +1,562 @@
+{
+ "summary": "Creating a Webflow Data Client app in your Workspace settings instantly generates a Client ID and Secret for local development and testing. However, listing your integration publicly on the Webflow Marketplace requires Workspace Admin 2FA, strict scope justifications, a published .webflow.io testing site, and a 2-5 minute demo video.",
+ "difficulty": {
+  "level": "medium",
+  "headline": "Credentials are generated immediately for testing, but public Marketplace listing requires a thorough manual review and demo video.",
+  "factors": [
+   {
+    "label": "2FA Requirement",
+    "detail": "Workspace admin account must have two-factor authentication enabled prior to submission.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S5"
+     ],
+     "quote": "Two-factor authentication is enabled for an admin account on the workspace",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Demo Video Required",
+    "detail": "Must record a 2-5 minute demo video in English demonstrating full functionality including approving and denying OAuth access.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S5"
+     ],
+     "quote": "Create a comprehensive demo video (2-5 minutes) that demonstrates your app’s key features and functionality",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Strict Scope Validation",
+    "detail": "Requested scopes must strictly adhere to the principle of least privilege and align directly with advertised features.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S1"
+     ],
+     "quote": "The OAuth scopes your App requests must match the functionality described in your listing.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "You get client credentials immediately upon registering your Data Client app in your Webflow Workspace settings, allowing local testing. You can also use Webflow's user testing process to invite specific external users before public publication.",
+  "evidence": {
+   "source_ids": [
+    "S5"
+   ],
+   "quote": "Testing access lets you validate your app with approved users before broader distribution",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Webflow Workspace Admin Account",
+   "detail": "Only workspace administrators can retrieve the Client Secret needed for OAuth authentication.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S3"
+    ],
+    "quote": "Only workspace administrators are authorized to view a client secret.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Two-Factor Authentication",
+   "detail": "2FA must be enabled for the admin account on the Webflow workspace.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Two-factor authentication is enabled for an admin account on the workspace",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Published Testing Site",
+   "detail": "A test Webflow site hosted on a .webflow.io domain with the app installed and features ready to test.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "Demo Video",
+   "detail": "A 2-5 minute video demonstrating app features and OAuth grant/deny flows.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Create a comprehensive demo video (2-5 minutes) that demonstrates your app’s key features and functionality",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Enable Two-Factor Authentication",
+   "detail": "Log into your Webflow Workspace account and enable 2FA on your admin account as required for developer app registration and marketplace submission.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "Two-factor authentication is enabled for an admin account on the workspace",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Register Data Client App",
+   "detail": "Navigate to Workspace Settings > Apps & Integrations > App Development section in your Webflow dashboard and register a new app to obtain your client_id and client_secret.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": "https://developers.webflow.com/data/reference/rest-introduction/quick-start",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Configure App Scopes",
+   "detail": "Select the minimal required OAuth scopes in your app's configuration settings. Map endpoint read/write permissions directly to declared product functionality.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": "https://developers.webflow.com/data/reference/scopes",
+   "agent_assist": "Draft the exact list of minimum required site-level or workspace-level scopes mapped to API endpoints used by the agent.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Apply the Principle of Least Privilege when requesting OAuth scopes.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Set Redirect URIs",
+   "detail": "Add your application's OAuth callback endpoint URLs (e.g. http://localhost:3000/auth for testing) to the app details in Workspace Settings.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide exact URI formatted strings for local development and production callback routes.",
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Implement Authorization Code Flow",
+   "detail": "Build your backend server using Webflow SDKs or custom logic to construct authorization URLs (with response_type=code and CSRF state) and exchange auth codes for Bearer tokens.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 1.0,
+    "high": 3.0,
+    "unit": "hours"
+   },
+   "link": "https://developers.webflow.com/data/reference/oauth-app",
+   "agent_assist": "Generate authorization URL construction code and backend token exchange handler with error handling and secure environment variable bindings.",
+   "evidence": {
+    "source_ids": [
+     "S3"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Prepare Testing Site & Review Assets",
+   "detail": "Create a published .webflow.io site with your app installed. Prepare review documentation, detailed pricing disclosures, and sample credentials for reviewers.",
+   "owner": "agent",
+   "phase": "submit",
+   "duration": {
+    "low": 1.0,
+    "high": 2.0,
+    "unit": "hours"
+   },
+   "link": "https://developers.webflow.com/data/v2.0.0-beta/docs/marketplace/submitting-your-app",
+   "agent_assist": "Prepare review submission descriptions, scope justifications, edge case documentation, and a pre-submission checklist.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "Record Demo Video and Submit App",
+   "detail": "Record a 2-5 minute video demonstrating user installation, core features, and OAuth approval and denial flows. Submit your app via the Webflow App submission form.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": "https://developers.webflow.com/submit",
+   "agent_assist": "Provide a structured demo video script outlining required approval/denial flow highlights.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "If your app uses a Data Client, the video must also demonstrate a working OAuth flow for users approving and denying the request",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s8",
+   "title": "Wait for Webflow Review",
+   "detail": "Webflow evaluates your app submission, backend endpoints, and OAuth security. Reviewers stop processing if blocking errors like OAuth failures occur. No official figure is stated for review duration.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 1.0,
+    "high": 3.0,
+    "unit": "weeks"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "If we hit a blocking issue, such as a failed installation or OAuth flow, we stop the review there and send you that feedback.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s9",
+   "title": "Publish to Webflow Marketplace",
+   "detail": "Once approved by Webflow review, complete public publication to list your app on the Webflow Marketplace.",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Custom Code Scope Elevation",
+   "detail": "Requesting custom_code:read or custom_code:write scopes allows injecting site-wide JavaScript and triggers high-risk security review requirements.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "custom_code:read and custom_code:write allow your App to inject site-wide JavaScript and are treated as elevated-risk scopes.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "OAuth Request URL Scope Discrepancy",
+   "detail": "The scopes in your authorization request URL must be equal to or a subset of configured app scopes; requesting additional unconfigured scopes fails authorization.",
+   "evidence": {
+    "source_ids": [
+     "S3"
+    ],
+    "quote": "At authorization time, Webflow only validates that the Install/OAuth URL doesn’t request scopes beyond those configured in your app settings",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Rate Limit Thresholds per Site Plan",
+   "detail": "API rate limits depend on the connected Webflow site plan (60 RPM for Starter/Basic, 120 RPM for CMS/Business) and return HTTP 429 when exceeded.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "If you exceed your rate limit, Webflow’s API will return an HTTP 429 Too Many Requests error.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "Review Stopped Due to OAuth Flow Failure",
+   "why": "Webflow review halts immediately without further defect checking if OAuth authorization or app installation fails during testing.",
+   "fix": "Thoroughly test your /auth route, token exchange, and authorization URL before submitting to the review queue.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "If we hit a blocking issue, such as a failed installation or OAuth flow, we stop the review there and send you that feedback.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Demo Video Rejection",
+   "why": "Data Client app submissions are rejected if the video fails to explicitly show a user approving AND denying the OAuth permissions prompt.",
+   "fix": "Re-record the video ensuring both grant and denial outcomes are demonstrated clearly.",
+   "evidence": {
+    "source_ids": [
+     "S5"
+    ],
+    "quote": "If your app uses a Data Client, the video must also demonstrate a working OAuth flow for users approving and denying the request",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Over-privileged Scope Rejection",
+   "why": "Requesting both read and write scopes, or requesting workspace scopes when site-level access is sufficient, violates least privilege guidelines.",
+   "fix": "Audit API calls and downgrade scopes to read-only or site-level permissions matching actual code usage.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "If your App only displays Webflow data, request :read scopes only.",
+    "level": "documented"
+   }
+  }
+ ],
+ "uncertain": [
+  "Official turnaround timeframe for Webflow Marketplace app reviews (no official figure stated in documentation)."
+ ],
+ "slug": "webflow",
+ "app_name": "Webflow",
+ "domain": "webflow.com",
+ "composio": {
+  "status": "byo",
+  "name": "Webflow",
+  "slug": "WEBFLOW",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://developers.webflow.com/data/v2.0.0-beta/apps/docs/marketplace-guidelines",
+   "title": "Marketplace Guidelines | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://developers.webflow.com/data/reference/authentication",
+   "title": "Authentication | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://developers.webflow.com/data/reference/oauth-app",
+   "title": "OAuth | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://developers.webflow.com/data/reference/rest-introduction/quick-start",
+   "title": "Getting Started | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://developers.webflow.com/data/v2.0.0-beta/docs/marketplace/submitting-your-app",
+   "title": "Submitting Your App to the Webflow Marketplace | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://developers.webflow.com/data/reference/scopes",
+   "title": "Scopes | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://webflow.com/legal/terms",
+   "title": "Terms | Webflow",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://developers.webflow.com/data/reference/rate-limits",
+   "title": "Rate Limits | Webflow Developer Documentation",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://www.webviewgold.com/vibe-coding/webflow-app-rejected-app-store-google-play",
+   "title": "Webflow App Rejected by Apple or Google? Fixes That Work",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://www.indiehackers.com/post/webflow-rejected-my-app-five-times-every-rejection-was-right-85cfc73447",
+   "title": "Webflow rejected my app five times. Every rejection was right. - Indie Hackers",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Enable Two-Factor Authentication",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s2",
+    "label": "Register Data Client App",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s3",
+    "label": "Configure App Scopes",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s4",
+    "label": "Set Redirect URIs",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s5",
+    "label": "Implement Authorization Code Flow",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 60,
+    "max_minutes": 180
+   },
+   {
+    "step_id": "s6",
+    "label": "Prepare Testing Site & Review Assets",
+    "owner": "agent",
+    "phase": "submit",
+    "min_minutes": 60,
+    "max_minutes": 120
+   },
+   {
+    "step_id": "s7",
+    "label": "Record Demo Video and Submit App",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s8",
+    "label": "Wait for Webflow Review",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 10080,
+    "max_minutes": 30240
+   },
+   {
+    "step_id": "s9",
+    "label": "Publish to Webflow Marketplace",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 5,
+    "max_minutes": 15
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 180,
+   "max_minutes": 430
+  },
+  "waiting": {
+   "min_minutes": 10080,
+   "max_minutes": 30240
+  },
+  "agent_share": 0.74
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 17,
+   "reported": 0,
+   "inferred": 6
+  },
+  "confidence": "high",
+  "unverified": [
+   "Published Testing Site",
+   "Register Data Client App",
+   "Set Redirect URIs",
+   "Implement Authorization Code Flow",
+   "Prepare Testing Site & Review Assets",
+   "Publish to Webflow Marketplace"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:48:49+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "queries": [
+   "Webflow API OAuth 2.0 register developer app credentials",
+   "Webflow OAuth app review approval requirements production access",
+   "Webflow developer app approval how long review rejected",
+   "Webflow API scopes verification requirements developer policy",
+   "Webflow app review process how long it takes extended quota production access",
+   "Webflow app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

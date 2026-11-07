@@ -1,0 +1,466 @@
+{
+ "summary": "Registering a Xero OAuth application is a self-serve process that yields immediate API credentials without requiring a developer approval review. However, Xero strictly prohibits using API data to train or fine-tune artificial intelligence models.",
+ "difficulty": {
+  "level": "easy",
+  "headline": "Self-serve setup provides immediate API credentials, but AI/ML model training on API data is strictly forbidden.",
+  "factors": [
+   {
+    "label": "No App Review for Standard Integrations",
+    "detail": "Human approval and app review are only required if you plan to publish your app on the Xero App Store.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S9"
+     ],
+     "quote": "Only required for apps published to the Xero App Store.",
+     "level": "reported"
+    }
+   },
+   {
+    "label": "Strict Prohibition on AI/ML Model Training",
+    "detail": "Data obtained through Xero APIs cannot be used to train, fine-tune, or build machine learning or AI models.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S1"
+     ],
+     "quote": "The primary update prohibits the use of data obtained through Xero’s APIs to train or contribute to the creation of any AI or machine learning model.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Multi-Tenant Context Management",
+    "detail": "Every API request requires supplying both a valid access token and a specific tenant ID retrieved via the connections endpoint.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S2"
+     ],
+     "quote": "From there, you can make API calls by providing both a valid access token and authorized tenant id with each request.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Developers can build and test immediately using a free Demo Company included with every Xero developer account.",
+  "evidence": {
+   "source_ids": [
+    "S9"
+   ],
+   "quote": "Developer account includes a demo company for testing.",
+   "level": "reported"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Xero Developer Account",
+   "detail": "A free developer account registered at developer.xero.com.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "Valid HTTPS Redirect URI",
+   "detail": "A secure HTTPS callback URL (or http://localhost/ for local development).",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Please note that http://127.0.0.1 cannot be used",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Application Terms & Privacy Policy",
+   "detail": "Legally binding terms of use and privacy policy made available to your users.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S7"
+    ],
+    "quote": "Your apps must include your own legally binding terms of use and privacy policy (your terms) that are available to any user of your apps and our services.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "AI/ML Data Usage Compliance",
+   "detail": "Compliance with Xero terms restricting API data usage strictly to approved app functionality without feeding AI models.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The primary update prohibits the use of data obtained through Xero’s APIs to train or contribute to the creation of any AI or machine learning model.",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Create Xero Developer Account",
+   "detail": "Sign up for a free developer account on the Xero developer platform.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": "https://www.xero.com/signup/developers/",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Register OAuth 2.0 Application",
+   "detail": "Log in to the developer portal ('My Apps'), click 'New app', select integration type, and enter your app details and redirect URIs.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.xero.com/app/manage",
+   "agent_assist": "Draft the app name, company URL, and redirect URIs list (e.g., https://yourdomain.com/callback or http://localhost/).",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Obtain Client Credentials",
+   "detail": "Navigate to the Configuration tab of your newly created application to retrieve your Client ID and generate a Client Secret.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 2.0,
+    "high": 5.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide instructions for securely storing Client ID and Secret in environment variables.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Navigate to the Configuration tab to retrieve your Client ID and Client Secret.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Configure Scopes and OAuth Flow",
+   "detail": "Set up your OAuth 2.0 authorization URL requesting required granular scopes and include offline_access to receive refresh tokens.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.xero.com/documentation/guides/oauth2/scopes",
+   "agent_assist": "Draft scope parameter strings combining granular scopes (e.g., accounting.invoices) and offline_access for backend token storage.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Make sure you add the offline_access scope to ensure the token refreshes as expected.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Test Integration with Demo Company",
+   "detail": "Execute the OAuth authorization code flow against Xero's Demo Company, exchange authorization codes for access and refresh tokens, and test API endpoints.",
+   "owner": "agent",
+   "phase": "launch",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Generate sample OAuth authorization links, build token exchange request handlers, and format API calls passing the xero-tenant-id header.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": "Developer account includes a demo company for testing.",
+    "level": "reported"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Strict AI/ML Training Ban",
+   "detail": "API data accessed from Xero must never be fed into LLMs or predictive analytics tools for fine-tuning or training.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The primary update prohibits the use of data obtained through Xero’s APIs to train or contribute to the creation of any AI or machine learning model.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "30-Minute Access Token Expiration",
+   "detail": "Access tokens expire after 30 minutes; you must request offline_access to get refresh tokens that last up to 60 days.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "However, the access tokens are short-lived, usually expiring after thirty minutes.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "http://127.0.0.1 Unsupported for Redirect URIs",
+   "detail": "Xero permits http://localhost/ for local development callbacks, but explicitly blocks http://127.0.0.1.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Please note that http://127.0.0.1 cannot be used",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Mandatory Shift to Granular Scopes",
+   "detail": "Broad scopes like accounting.transactions are deprecated in favor of granular scopes like accounting.invoices and accounting.payments.",
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": "Apps created on or after 2 March 2026 will use the new granular scopes",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "API returns 401 Forbidden with WWW-Authenticate: insufficient_scope",
+   "why": "Your app called an endpoint requiring permissions that were not included when the user authorized your app.",
+   "fix": "Add the specific required granular scope to your authorization URL and prompt the user to re-authorize.",
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": "The API will return a 401 forbidden error with a response header WWW-Authenticate:insufficent_scope.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "API requests fail after 30 minutes",
+   "why": "Access tokens automatically expire after 30 minutes.",
+   "fix": "Request the offline_access scope during authorization and implement automatic background token refresh using the refresh token.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "However, the access tokens are short-lived, usually expiring after thirty minutes.",
+    "level": "reported"
+   }
+  },
+  {
+   "problem": "API requests fail due to missing tenant context",
+   "why": "Xero requires a valid tenant ID passed in the xero-tenant-id request header for organization endpoints.",
+   "fix": "Query GET https://api.xero.com/connections after token exchange to fetch authorized tenant IDs and include the correct tenant ID in subsequent requests.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Find out which tenants the user has authorized by calling the connections endpoint.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "App suspension or platform termination",
+   "why": "Violating Xero platform terms by using API data for AI model training or deploying automated bots to bypass controls.",
+   "fix": "Ensure AI agents handle Xero data purely in memory for user-driven workflows and never retain or send API data into model training datasets.",
+   "evidence": {
+    "source_ids": [
+     "S7"
+    ],
+    "quote": "If we detect a risk or suspect a breach we may suspend or terminate access to protect the platform.",
+    "level": "documented"
+   }
+  }
+ ],
+ "uncertain": [
+  "Exact review wait times and process for listing an application publicly on the Xero App Store (no official figure in sources)."
+ ],
+ "slug": "xero",
+ "app_name": "Xero",
+ "domain": "xero.com",
+ "composio": {
+  "status": "byo",
+  "name": "Xero",
+  "slug": "XERO",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://developer.xero.com/faq/pricing-and-policy-updates",
+   "title": "Pricing and Policy Updates FAQs — Xero Developer",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://developer.xero.com/documentation/guides/oauth2/auth-flow",
+   "title": "The standard authorization code flow — Xero Developer",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://developer.xero.com/documentation/guides/oauth2/scopes",
+   "title": "Scopes — Xero Developer",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://developer.xero.com/faq/granular-scopes",
+   "title": "Granular Scopes FAQs — Xero Developer",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://apps.xero.com/us/app/approveit",
+   "title": "Approveit Xero Integration Reviews & Features — Xero App Store US",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://apps.xero.com/us/app/paidnice",
+   "title": "Paidnice Xero Integration Reviews & Features — Xero App Store US",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://developer.xero.com/xero-developer-platform-terms-conditions",
+   "title": "Developer Platform Terms and Conditions — Xero Developer",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://apps.xero.com/us/app/approvalmax",
+   "title": "ApprovalMax Xero Integration Reviews & Features — Xero App Store US",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://nango.dev/docs/api-integrations/xero/how-to-register-your-own-xero-api-oauth-app",
+   "title": "How to register your own Xero OAuth app - Nango Docs",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://www.apideck.com/blog/xero-integration-authentication-and-accounts-receivable-best-practices",
+   "title": "Xero Integration Made Easy: Authentication and Accounts Receivable Best Practices",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Create Xero Developer Account",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s2",
+    "label": "Register OAuth 2.0 Application",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s3",
+    "label": "Obtain Client Credentials",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 2,
+    "max_minutes": 5
+   },
+   {
+    "step_id": "s4",
+    "label": "Configure Scopes and OAuth Flow",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s5",
+    "label": "Test Integration with Demo Company",
+    "owner": "agent",
+    "phase": "launch",
+    "min_minutes": 30,
+    "max_minutes": 60
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 57,
+   "max_minutes": 115
+  },
+  "waiting": {
+   "min_minutes": 0,
+   "max_minutes": 0
+  },
+  "agent_share": 0.78
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 11,
+   "reported": 7,
+   "inferred": 3
+  },
+  "confidence": "medium",
+  "unverified": [
+   "Xero Developer Account",
+   "Create Xero Developer Account",
+   "Register OAuth 2.0 Application"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:46:22+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "queries": [
+   "Xero API OAuth 2.0 register developer app credentials",
+   "Xero OAuth app review approval requirements production access",
+   "Xero developer app approval how long review rejected",
+   "Xero API scopes verification requirements developer policy",
+   "Xero app review process how long it takes extended quota production access",
+   "Xero app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

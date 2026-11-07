@@ -1,0 +1,503 @@
+{
+ "summary": "Registering a LinkedIn application immediately provides a Client ID and Secret for basic self-serve functionality, but accessing specialized business products requires linking a LinkedIn Company Page and undergoing formal vetting. Vetted products require identity verification, privacy policy compliance, and screen recording submissions.",
+ "difficulty": {
+  "level": "medium",
+  "headline": "Basic self-serve APIs are available immediately upon app creation, but business products require company verification and use-case approval.",
+  "factors": [
+   {
+    "label": "Company Page Association",
+    "detail": "Developers must associate an active LinkedIn Company Page with the app to verify organizational ownership.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S8"
+     ],
+     "quote": "Add your company's LinkedIn page (required for verification)",
+     "level": "reported"
+    }
+   },
+   {
+    "label": "Vetted API Program Review",
+    "detail": "Specialized APIs undergo multi-step reviews including organization identity vetting and access form evaluation.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S2"
+     ],
+     "quote": "We are verifying whether your organization meets our access requirements.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Screencast / Video Demo Submission",
+    "detail": "Restricted products require submitting a recorded screencast showing user authorization and feature implementation.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S2"
+     ],
+     "quote": "The screen recording/screencast you provided does not meet our requirements.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Self-serve API products and basic OAuth workflows can be configured and tested immediately upon app creation. The developer portal also provides an OAuth token generator tool for testing.",
+  "evidence": {
+   "source_ids": [
+    "S10"
+   ],
+   "quote": "The LinkedIn Developer Portal has a token generator for manually creating tokens.",
+   "level": "reported"
+  }
+ },
+ "requirements": [
+  {
+   "label": "LinkedIn Account",
+   "detail": "A personal or corporate LinkedIn account in good standing.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "To access the APIs you must sign-in to LinkedIn, and register an Application.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "LinkedIn Company Page",
+   "detail": "An official LinkedIn Company Page associated with your legal entity.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Add your company's LinkedIn page (required for verification)",
+    "level": "reported"
+   }
+  },
+  {
+   "label": "Business & Legal Details",
+   "detail": "Business email address, legal entity name, registered address, website, and privacy policy URL.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": "Are you prepared to share your business email address and your organization’s legal name, registered address, website, and privacy policy?",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "HTTPS OAuth Redirect URI",
+   "detail": "Absolute HTTPS redirect/callback URL registered in the Auth tab.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Add the redirect (callback) URL via HTTPS to your server.",
+    "level": "reported"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Create LinkedIn Developer Application",
+   "detail": "Sign in to the LinkedIn Developer Portal and register a new application under 'My Apps', providing an application name, description, and logo.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": "https://www.linkedin.com/developers/apps",
+   "agent_assist": "Draft the app description, verify app name compliance (ensuring no LinkedIn/Microsoft brand names), and compile required asset checklist.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "To access the APIs you must sign-in to LinkedIn, and register an Application.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Associate LinkedIn Company Page",
+   "detail": "Link your official LinkedIn Company Page to your developer app to establish organizational authority for verification.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Add your company's LinkedIn page (required for verification)",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Configure Auth Settings and Redirect URIs",
+   "detail": "Navigate to the Auth tab in your app settings, note your Client ID and Client Secret, and register your absolute HTTPS OAuth redirect URIs.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Format and validate absolute HTTPS redirect URIs according to LinkedIn specification rules.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Add the redirect (callback) URL via HTTPS to your server.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Add API Products and Draft Access Request",
+   "detail": "Select necessary API products (such as Community Management API) in the Products tab and complete the access request form with business details.",
+   "owner": "agent",
+   "phase": "submit",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.linkedin.com/product-catalog",
+   "agent_assist": "Draft access request form responses, document business use cases, and verify alignment with LinkedIn approved use case guidelines.",
+   "evidence": {
+    "source_ids": [
+     "S4"
+    ],
+    "quote": "Are you prepared to share your business email address and your organization’s legal name, registered address, website, and privacy policy?",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Record App Screencast Demo",
+   "detail": "Create a clear screen recording demonstrating the user consent flow, OAuth permission dialog, and API implementation within your product.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide a storyboard script detailing all user actions, consent screens, and scope usages required for video approval.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "The screen recording/screencast you provided does not meet our requirements.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Submit Application for Product Review",
+   "detail": "Submit the completed access form and screencast through the Developer Portal and track the application status.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "We are reviewing your developer application and screencast.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "LinkedIn Application Vetting Review",
+   "detail": "LinkedIn performs organization verification, access form review, and screencast review. Waiting time range varies as no official figure is provided.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 1.0,
+    "high": 6.0,
+    "unit": "weeks"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "We are verifying whether your organization meets our access requirements.",
+    "level": "documented"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Invalid App Name Rejection",
+   "detail": "Including 'LinkedIn' or 'Microsoft' in your application name results in an automatic review rejection.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "Your application name includes portions of the LinkedIn or Microsoft names or logos.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Strict Redirect URI Formatting Rules",
+   "detail": "Redirect URIs must be absolute HTTPS URLs; they cannot contain URL fragments (#) or parameters.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Add the redirect (callback) URL via HTTPS to your server.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "Screencast Rejections for Vetted APIs",
+   "detail": "Product requests are frequently rejected if the screencast fails to show explicit end-user consent screens and clear API data usage.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "The screen recording/screencast you provided does not meet our requirements.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "Application Rejected due to Invalid Screencast",
+   "why": "The submitted screen recording does not meet LinkedIn's detail or privacy standards.",
+   "fix": "Record a clear, unedited screencast showing the OAuth prompt, user authorization consent, and how LinkedIn API data is rendered in your product.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "The screen recording/screencast you provided does not meet our requirements.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Fail Organization Verification",
+   "why": "LinkedIn cannot verify that your organization is a legally registered active entity or associated with your page.",
+   "fix": "Ensure the linked LinkedIn Company Page belongs to your organization and matching legal name, registered address, and business website details are submitted.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "The LinkedIn page you associated with your app belongs to a different organization.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Unapproved Use Case Rejection",
+   "why": "The requested feature or data usage falls into restricted categories or violates LinkedIn API policy.",
+   "fix": "Re-evaluate your product use case against LinkedIn's restricted use cases policy and rewrite your application submission to focus on supported Member productivity solutions.",
+   "evidence": {
+    "source_ids": [
+     "S2"
+    ],
+    "quote": "The use case you specified is not an approved use case for the API.",
+    "level": "documented"
+   }
+  }
+ ],
+ "uncertain": [
+  "Exact SLA or standard turnaround duration for LinkedIn access form reviews and organization identity vetting (no official figure in documentation)."
+ ],
+ "slug": "linkedin",
+ "app_name": "LinkedIn",
+ "domain": "linkedin.com",
+ "composio": {
+  "status": "managed",
+  "name": "LinkedIn",
+  "slug": "LINKEDIN",
+  "related": [
+   {
+    "name": "Linkedin Ads",
+    "slug": "LINKEDIN_ADS",
+    "status": "byo"
+   }
+  ],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://www.linkedin.com/legal/l/api-terms-of-use",
+   "title": "API Terms of Use",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.linkedin.com/help/linkedin/answer/a1449586",
+   "title": "Developer application review status definitions | LinkedIn Help",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://developer.linkedin.com",
+   "title": "LinkedIn Developer Solutions",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://developer.linkedin.com/product-catalog/marketing/community-management-api",
+   "title": "LinkedIn API | Community Management API",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.linkedin.com/legal/privacy-policy",
+   "title": "LinkedIn Privacy Policy",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://www.linkedin.com/legal/user-agreement",
+   "title": "User Agreement | LinkedIn",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://www.linkedin.com/top-content/marketing/product-launch-readiness-checklist/key-layers-of-a-production-ready-app",
+   "title": "Key Layers of a Production-Ready App",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://reintech.io/blog/implementing-linkedin-oauth-20-authentication-in-web-apps",
+   "title": "Implementing LinkedIn OAuth 2.0 Authentication in Web Apps",
+   "kind": "community"
+  },
+  {
+   "id": "S9",
+   "url": "https://community.latenode.com/t/successfully-developing-apps-using-linkedins-developer-platform-any-experiences/33847",
+   "title": "Successfully developing apps using LinkedIn's developer platform - any experiences? - API - Latenode Official Community",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow",
+   "title": "LinkedIn 3-Legged OAuth Flow - LinkedIn | Microsoft Learn",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Create LinkedIn Developer Application",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s2",
+    "label": "Associate LinkedIn Company Page",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s3",
+    "label": "Configure Auth Settings and Redirect URIs",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s4",
+    "label": "Add API Products and Draft Access Request",
+    "owner": "agent",
+    "phase": "submit",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s5",
+    "label": "Record App Screencast Demo",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s6",
+    "label": "Submit Application for Product Review",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s7",
+    "label": "LinkedIn Application Vetting Review",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 10080,
+    "max_minutes": 60480
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 90,
+   "max_minutes": 175
+  },
+  "waiting": {
+   "min_minutes": 10080,
+   "max_minutes": 60480
+  },
+  "agent_share": 0.34
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 14,
+   "reported": 7,
+   "inferred": 0
+  },
+  "confidence": "medium",
+  "unverified": []
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:47:27+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "LinkedIn API OAuth 2.0 register developer app credentials",
+   "LinkedIn OAuth app review approval requirements production access",
+   "LinkedIn developer app approval how long review rejected",
+   "LinkedIn API scopes verification requirements developer policy",
+   "LinkedIn app review process how long it takes extended quota production access",
+   "LinkedIn app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

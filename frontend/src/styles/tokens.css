@@ -1,0 +1,50 @@
+/* Design tokens: dark, near-black surfaces, lavender + electric-blue accents. */
+:root {
+  /* surfaces */
+  --bg: #111111;
+  --surface: #161616;
+  --surface-2: #1c1c1c;
+  --surface-3: #232323;
+  --border: #2a2a2a;
+  --border-soft: #202020;
+
+  /* text */
+  --text: #ffffff;
+  --text-muted: #a8a8a8;
+  --text-faint: #6f6f6f;
+
+  /* accents */
+  --lavender: #e9b3ff;
+  --blue: #1010ff;
+  --blue-soft: #4d5dff;
+
+  /* who does the work (journey strip) */
+  --agent: var(--lavender);
+  --you: var(--blue-soft);
+  --provider-a: #2b2b2b;
+  --provider-b: #353535;
+
+  /* status */
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --hard: #fb923c;
+  --bad: #f87171;
+
+  /* type */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* shape + motion */
+  --radius-card: 20px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --radius-btn: 6px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 400ms;
+
+  /* layout */
+  --page-max: 1120px;
+  --narrow-max: 760px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --nav-h: 64px;
+}

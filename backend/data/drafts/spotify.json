@@ -1,0 +1,522 @@
+{
+ "summary": "Registering a Spotify app instantly yields client credentials for Development Mode, allowing immediate testing with up to 25 explicit users. However, moving to Extended Access for production requires passing a strict policy review and meeting high audience requirements.",
+ "difficulty": {
+  "level": "gated",
+  "headline": "Production access requires a formal quota extension review that takes 6+ weeks and requires meeting strict audience and platform alignment criteria.",
+  "factors": [
+   {
+    "label": "Strict Extended Access Criteria",
+    "detail": "Spotify reserves Extended Quota access for established, scalable applications, reportedly requiring an audience capable of sustaining 25,000 active monthly users.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S7"
+     ],
+     "quote": "After that date, new proposals will need to meet the new criteria and Developer Terms, and the application submission process will move to our Web API page.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Lengthy Review Wait Times",
+    "detail": "Quota extension reviews take at least 6 weeks, and any rejection resets the waiting period for another 6 weeks upon resubmission.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S10"
+     ],
+     "quote": "During peak periods, it may take longer than six weeks.",
+     "level": "reported"
+    }
+   },
+   {
+    "label": "Broad Prohibited Use Cases",
+    "detail": "Spotify prohibits AI voice assistants, games/trivia, audio analysis, and commercial in-store playback.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S6"
+     ],
+     "quote": "Do not create a voice-enabled SDA that enables a user to control Spotify with their voice, or any kind of voice assistant that provides voice-control functionality.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Apps are created immediately in Development Mode, giving developers instant access to Client IDs and Client Secrets to build and test OAuth flows with up to 25 whitelisted user accounts.",
+  "evidence": {
+   "source_ids": [],
+   "quote": null,
+   "level": "inferred"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Spotify Account",
+   "detail": "A registered Spotify account is required to access the Spotify Developer Dashboard.",
+   "required": true,
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "Public Privacy Policy",
+   "detail": "Developers must provide a privacy policy detailing how user data is collected, processed, and disclosed.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "You must provide a privacy policy which clearly describes how you intend to access, use, process and disclose user data.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "User Disconnect and Data Deletion Mechanism",
+   "detail": "The application must allow users to disconnect their Spotify account and must delete user data upon request.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Don’t mislead or confuse users about the ways you intend to use their data.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Compliance with Prohibited Uses",
+   "detail": "Apps must not include trivia games, voice assistants controlling playback, or content analysis/listenership metrics.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Do not create a game, including trivia quizzes.",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Review Policy and Prohibited Use Cases",
+   "detail": "Verify that your AI application does not fall under prohibited categories such as voice assistants, games, content analytics, or data transfer to non-playlist services.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.spotify.com/policy",
+   "agent_assist": "Audit proposed product architecture against Spotify Developer Policy restrictions, identifying any prohibited voice assistant, trivia, or audio analysis features.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Do not create a voice-enabled SDA that enables a user to control Spotify with their voice, or any kind of voice assistant that provides voice-control functionality.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Create Developer App and Retrieve Credentials",
+   "detail": "Log into the Spotify Developer Dashboard, create a new app entry, and accept the Developer Terms to obtain your Client ID and Client Secret.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.spotify.com/dashboard",
+   "agent_assist": "Draft the app title, short description, and configuration options required during initial app creation.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Configure Redirect URIs and Test Users",
+   "detail": "Save target OAuth redirect URIs in the dashboard settings and add up to 25 Spotify account emails to the Development Mode user whitelist.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Generate standard valid redirect URI formats for your application environments and list required test user account formats.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Draft Privacy Policy and Disconnect Flow",
+   "detail": "Publish a privacy policy URL and build an account disconnection feature allowing users to revoke access and delete stored data.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": "https://developer.spotify.com/policy",
+   "agent_assist": "Draft privacy policy copy detailing Spotify data handling and write technical specs for a user account disconnect and data deletion endpoint.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "You must provide a privacy policy which clearly describes how you intend to access, use, process and disclose user data.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Prepare Extended Access Submission",
+   "detail": "Assemble required materials for production quota review, including scope justifications, audience scalability proof, architecture details, and UI screenshots.",
+   "owner": "agent",
+   "phase": "submit",
+   "duration": {
+    "low": 1.0,
+    "high": 2.0,
+    "unit": "hours"
+   },
+   "link": "https://developer.spotify.com/documentation/web-api/concepts/quota-modes",
+   "agent_assist": "Draft complete responses for extended quota submission fields, justifying each scope and documenting audience size and compliance details.",
+   "evidence": {
+    "source_ids": [
+     "S7"
+    ],
+    "quote": "over 95% of the applications we receive for extended Web API access fall short of basic security, privacy, and licensing standards.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Submit Quota Extension Request",
+   "detail": "Fill out and submit the official Extended Access application form via the Spotify Developer Dashboard.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 10.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "Wait for Spotify Review",
+   "detail": "Wait for the Spotify Developer team to review the submission. Review times typically take at least six weeks.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 6.0,
+    "high": 8.0,
+    "unit": "weeks"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "During peak periods, it may take longer than six weeks.",
+    "level": "reported"
+   }
+  },
+  {
+   "id": "s8",
+   "title": "Respond to Review Decision",
+   "detail": "If approved, your app moves to Extended Quota mode. If rejected, review the decision email, apply fixes, and resubmit (restarting the 6-week SLA).",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 15.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Analyze rejection feedback or audit non-compliance issues to draft a revised application submission.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "If your request is rejected and needs to be resubmitted, an SLA of another 6 weeks will be applied after resubmission.",
+    "level": "reported"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Rejection Resets Review SLA by 6 Weeks",
+   "detail": "If an extended access request is rejected, resubmitting starts a brand-new 6-week review waiting window.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "If your request is rejected and needs to be resubmitted, an SLA of another 6 weeks will be applied after resubmission.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "High Rejection Rate for Extended Access",
+   "detail": "Over 95% of quota extension applications fail due to privacy, security, or licensing non-compliance.",
+   "evidence": {
+    "source_ids": [
+     "S7"
+    ],
+    "quote": "over 95% of the applications we receive for extended Web API access fall short of basic security, privacy, and licensing standards.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Prohibited AI and Voice Control Use Cases",
+   "detail": "Creating voice assistants to control Spotify playback or analyzing audio/listenership metrics strictly violates policy.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Do not create a voice-enabled SDA that enables a user to control Spotify with their voice, or any kind of voice assistant that provides voice-control functionality.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "Application building prohibited functionality (e.g. voice agent, games, metrics analysis).",
+   "why": "Spotify Developer Policy strictly prohibits voice-control assistants, trivia games, and listenership benchmarking/analysis.",
+   "fix": "Remove non-compliant features from the product design prior to submitting for Extended Access.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Do not create a game, including trivia quizzes.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Application rejected without explicit explanation email.",
+   "why": "High submission volumes can cause brief responses or missing automated rejection emails.",
+   "fix": "Thoroughly review Developer Terms, Developer Policy, and Design Guidelines independently, fix potential violations, and resubmit.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "If a submission was rejected, there must be a reason for it, so we suggest tweaking your app or your application to comply with the requirements.",
+    "level": "reported"
+   }
+  },
+  {
+   "problem": "App locked to 25 users in Development Mode during production launch.",
+   "why": "Development Mode restricts access strictly to 25 manually whitelisted Spotify accounts.",
+   "fix": "Apply for Extended Access well in advance of public launch to accommodate the 6+ week review timeline.",
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "uncertain": [
+  "The official exact SLA duration for initial Extended Access applications beyond the general 6+ week community estimate.",
+  "Whether early-stage startups without an existing 25,000 monthly active user base can qualify for Extended Quota Access."
+ ],
+ "slug": "spotify",
+ "app_name": "Spotify",
+ "domain": "spotify.com",
+ "composio": {
+  "status": "byo",
+  "name": "Spotify",
+  "slug": "SPOTIFY",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://developer.spotify.com/documentation/web-api/concepts/authorization",
+   "title": "Authorization | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://developer.spotify.com/documentation/web-api/concepts/quota-modes",
+   "title": "Quota modes | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://developer.spotify.com/documentation/web-api/tutorials/code-flow",
+   "title": "Authorization Code Flow | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://developer.spotify.com/documentation/web-api",
+   "title": "Web API | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://developer.spotify.com/documentation/web-api/tutorials/getting-started",
+   "title": "Getting started with Web API | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://developer.spotify.com/policy",
+   "title": "Spotify Developer Policy | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://developer.spotify.com/blog/2025-04-15-updating-the-criteria-for-web-api-extended-access",
+   "title": "Updating the Criteria for Web API Extended Access | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://developer.spotify.com/documentation/web-api/concepts/scopes",
+   "title": "Scopes | Spotify for Developers",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://community.spotify.com/t5/Spotify-for-Developers/Request-production-access-for-Spotify-OAuth-app/td-p/7312329",
+   "title": "Request production access for Spotify OAuth app - Spotify Community",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://community.spotify.com/forum/en/discussion/5599466/important-app-review-and-quota-extension-waiting-times",
+   "title": "Important: App review and quota extension waiting times - Spotify Community",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Review Policy and Prohibited Use Cases",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s2",
+    "label": "Create Developer App and Retrieve Credentials",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s3",
+    "label": "Configure Redirect URIs and Test Users",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s4",
+    "label": "Draft Privacy Policy and Disconnect Flow",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s5",
+    "label": "Prepare Extended Access Submission",
+    "owner": "agent",
+    "phase": "submit",
+    "min_minutes": 60,
+    "max_minutes": 120
+   },
+   {
+    "step_id": "s6",
+    "label": "Submit Quota Extension Request",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 10,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s7",
+    "label": "Wait for Spotify Review",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 60480,
+    "max_minutes": 80640
+   },
+   {
+    "step_id": "s8",
+    "label": "Respond to Review Decision",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 15,
+    "max_minutes": 60
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 145,
+   "max_minutes": 320
+  },
+  "waiting": {
+   "min_minutes": 60480,
+   "max_minutes": 80640
+  },
+  "agent_share": 0.66
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 11,
+   "reported": 5,
+   "inferred": 6
+  },
+  "confidence": "medium",
+  "unverified": [
+   "Testing before approval",
+   "Spotify Account",
+   "Create Developer App and Retrieve Credentials",
+   "Configure Redirect URIs and Test Users",
+   "Submit Quota Extension Request",
+   "App locked to 25 users in Development Mode during production launch."
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:43:41+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "Spotify API OAuth 2.0 register developer app credentials",
+   "Spotify OAuth app review approval requirements production access",
+   "Spotify developer app approval how long review rejected",
+   "Spotify API scopes verification requirements developer policy",
+   "Spotify app review process how long it takes extended quota production access",
+   "Spotify app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

@@ -1,0 +1,585 @@
+{
+ "summary": "To connect Pipedrive via OAuth 2.0, developers must create an OAuth application within a Pipedrive Developer Sandbox account to obtain a Client ID and Client Secret. Public Marketplace apps require a detailed listing submission and mandatory review taking up to 21 business days, while Private apps can be set directly to Live.",
+ "difficulty": {
+  "level": "medium",
+  "headline": "Self-serve setup for private use and draft testing, but publishing a public integration to the Pipedrive Marketplace requires a comprehensive review process taking up to 21 business days.",
+  "factors": [
+   {
+    "label": "Marketplace Review Wait Time",
+    "detail": "Public marketplace app submissions undergo thorough manual testing and reviews can take up to 21 business days.",
+    "severity": "high",
+    "evidence": {
+     "source_ids": [
+      "S6"
+     ],
+     "quote": "Due to a surge in demand and ongoing vacations, public app reviews may take up to 21 business days.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Developer Sandbox Requirement",
+    "detail": "OAuth applications can only be created and managed inside a Pipedrive Developer Sandbox account.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S8"
+     ],
+     "quote": "You must have a developer sandbox account for app creation to see Developer Hub.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Short Token Lifetimes",
+    "detail": "OAuth access tokens expire after 60 minutes, requiring robust refresh token management in your application.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S6"
+     ],
+     "quote": null,
+     "level": "inferred"
+    }
+   },
+   {
+    "label": "Single Callback URL Constraint",
+    "detail": "Pipedrive restricts each app registration to a single callback URL.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S8"
+     ],
+     "quote": "Please keep in mind that we allow only one callback URL per app.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Draft apps can be installed and fully tested immediately within the developer's sandbox account prior to submitting for review.",
+  "evidence": {
+   "source_ids": [
+    "S8"
+   ],
+   "quote": "Once you’ve completed filling up the Basic info and OAuth & access scopes, we advise you to start installing your app and testing it to see how it works.",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Pipedrive Developer Sandbox Account",
+   "detail": "A dedicated Sandbox account is required to access the Developer Hub and create OAuth apps.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "OAuth Callback URL",
+   "detail": "A HTTPS redirect URI to receive authorization codes during user authorization.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "This tab has two required fields – App name and OAuth Callback URL.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Developer Partner Agreement Acceptance",
+   "detail": "Developers must agree to the Pipedrive Developer Partner Agreement terms.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Review and understand the requirements of the Pipedrive Developer Partner Agreement",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Marketplace Listing Assets (Public Apps)",
+   "detail": "High-quality screenshots (3-5 images), app description, support links, and onboarding guides are required for Marketplace review.",
+   "required": false,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Your app listing includes 3-5 high-quality images that are easily readable and include assistive cues",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Request a Pipedrive Developer Sandbox Account",
+   "detail": "Sign up for a free developer sandbox account on the Pipedrive Developer portal to access the Developer Hub.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": "https://developers.pipedrive.com/",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "You must have a developer sandbox account for app creation to see Developer Hub.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Create a Draft OAuth Application",
+   "detail": "In Developer Hub, select 'Create an app' and choose whether to register a Public App or Private App, entering the App Name and single Callback URL.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": "https://app.pipedrive.com/developer-hub",
+   "agent_assist": "Draft the App Name, choose the initial Callback URL, and evaluate whether a Public or Private App type fits the product deployment model.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "To register a new app, click on the green “Create an app” button (or “+ Create an app” if you have existing apps) followed by “Create public app”.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Configure OAuth Access Scopes and Retrieve Client Credentials",
+   "detail": "Select the required API access scopes under the 'OAuth & access scopes' tab and save to generate the app's Client ID and Client Secret.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Map the required Pipedrive API endpoints to their minimum required scopes and save the generated client_id and client_secret.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "This is where you will get your app’s unique client_id and client_secret for OAuth authorization.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Implement OAuth 2.0 Flow and Token Refresh Handler",
+   "detail": "Build the authorization redirect endpoint, code exchange logic at https://oauth.pipedrive.com/oauth/token, and automatic refresh handling for 60-minute access tokens.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": "https://pipedrive.readme.io/docs/marketplace-oauth-authorization",
+   "agent_assist": "Implement authorization code exchange, Basic Auth header generation (Base64 client_id:client_secret), and automatic token refresh prior to 60-minute expiration.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Install and Test Draft App in Sandbox",
+   "detail": "Click 'Install & test' in Developer Hub to perform test authorization flows and verify API data retrieval using your sandbox account.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 15.0,
+    "high": 30.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Prepare test scripts and sample data requests to verify OAuth flow execution and data responses within the Sandbox environment.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Once you’ve completed filling up the Basic info and OAuth & access scopes, we advise you to start installing your app and testing it to see how it works.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Prepare Marketplace Listing and Documentation",
+   "detail": "For Public apps, fill out listing details including app summary, full integration description, support contact, pricing link, and 3-5 screenshots.",
+   "owner": "agent",
+   "phase": "submit",
+   "duration": {
+    "low": 30.0,
+    "high": 60.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft clear marketplace summaries, full step-by-step installation instructions, support info, and pre-submission checklist verification.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "The app full description is specific to your integration, well-written and has a comprehensive overview of what the app does",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s7",
+   "title": "Submit App for Marketplace Review",
+   "detail": "Preview the public app listing form and click 'Send to review' to initiate formal Marketplace evaluation.",
+   "owner": "you",
+   "phase": "submit",
+   "duration": {
+    "low": 5.0,
+    "high": 15.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Provide a submission message, review checklist, and verified links for demo video or setup instructions.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Preview your app listing and check that the information is accurate",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s8",
+   "title": "Wait for Pipedrive Review and Approval",
+   "detail": "Pipedrive reviews technical implementation, installation UX, listing details, and security compliance.",
+   "owner": "provider",
+   "phase": "review",
+   "duration": {
+    "low": 1.0,
+    "high": 21.0,
+    "unit": "days"
+   },
+   "link": null,
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": "Due to a surge in demand and ongoing vacations, public app reviews may take up to 21 business days.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s9",
+   "title": "Publish App Live",
+   "detail": "Once approved by Pipedrive (or immediately for Private apps by selecting 'Change to Live'), update app status to Live to allow external customer connections.",
+   "owner": "you",
+   "phase": "launch",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Verify production OAuth redirect endpoints and environment settings.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "Once approved, your app status will change to Live",
+    "level": "reported"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "Single Callback URL per Application",
+   "detail": "Pipedrive strictly permits only one callback URL per app registration. Multi-tenant integrations must route all accounts through a unified backend callback or state parameter handler.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "Please keep in mind that we allow only one callback URL per app.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Short Token Expiration Period",
+   "detail": "Access tokens expire after 60 minutes. Your application must store refresh tokens securely and renew access tokens automatically.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "title": "Developer Hub Restricted to Sandbox Accounts",
+   "detail": "Developer Hub is not present in standard production accounts. OAuth application credentials must be registered inside a dedicated Developer Sandbox account.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "OAuth app management (Developer Hub) is only available in Sandbox accounts, not in production accounts.",
+    "level": "reported"
+   }
+  },
+  {
+   "title": "Immutable App Type",
+   "detail": "App type selection (Public vs Private) cannot be changed in Developer Hub once created.",
+   "evidence": {
+    "source_ids": [
+     "S8"
+    ],
+    "quote": "NB: Do pick your app type carefully, as it cannot be changed later on Developer Hub.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "OAuth callback URL mismatch error during authorization",
+   "why": "The redirect_uri parameter supplied in the GET request does not match the single callback URL registered in the app form.",
+   "fix": "Ensure the authorization request redirect_uri matches the single Callback URL saved under Basic Info in Developer Hub.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The callback URL you provided when you registered your app.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "External clients cannot authorize or install the application",
+   "why": "The app remains in 'Draft' status, restricting authorization exclusively to users within the developer's sandbox company.",
+   "fix": "Switch status to 'Live' for Private apps, or complete Marketplace review submission for Public apps.",
+   "evidence": {
+    "source_ids": [
+     "S10"
+    ],
+    "quote": "While an app is in Draft, it can only be authorized by users in the same Pipedrive account where the app was created.",
+    "level": "reported"
+   }
+  },
+  {
+   "problem": "App rejection during Marketplace review due to scope creep",
+   "why": "Requesting broad or unneeded permissions violates Pipedrive's principle of requesting minimal scopes.",
+   "fix": "Remove unneeded permissions under 'OAuth & access scopes' in Developer Hub and re-test core functionality before resubmitting.",
+   "evidence": {
+    "source_ids": [
+     "S6"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "uncertain": [
+  "Specific SLAs for Private App status propagation after clicking 'Change to Live'.",
+  "Exact tier-specific rate limits beyond the default 480 requests per 2 seconds limit for OAuth apps."
+ ],
+ "slug": "pipedrive",
+ "app_name": "Pipedrive",
+ "domain": "pipedrive.com",
+ "composio": {
+  "status": "byo",
+  "name": "Pipedrive",
+  "slug": "PIPEDRIVE",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://developers.pipedrive.com/docs/api/v1/Oauth",
+   "title": "Pipedrive API v1 Dev References (Oauth) - Learn - Test - Try Now",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://pipedrive.readme.io/docs/marketplace-oauth-api",
+   "title": "OAuth 2.0 overview",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://devcommunity.pipedrive.com/t/cannot-submit-app-to-review/6429",
+   "title": "Cannot submit app to review - App Development - Pipedrive Developers' Community",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.pipedrive.com/en/developer-agreement",
+   "title": "Pipedrive Developer Agreement | Pipedrive",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://devcommunity.pipedrive.com/t/is-enabling-the-installation-for-not-logged-in-users-a-requirement-to-get-an-unlisted-app-approved/4980",
+   "title": "Is enabling the installation for not-logged-in users a requirement to get an unlisted app approved? - App Development - Pipedrive Developers' Community",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://pipedrive.readme.io/docs/marketplace-app-approval-process",
+   "title": "App approval process",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://devcommunity.pipedrive.com/t/marketplace-review-timeline-for-initial-feedback/20188",
+   "title": "Marketplace Review – Timeline for Initial Feedback - App Development - Pipedrive Developers' Community",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://pipedrive.readme.io/docs/marketplace-registering-the-app",
+   "title": "Registering a public app",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://endgrate.com/blog/using-the-pipedrive-api-to-get-leads-in-php",
+   "title": "Using the Pipedrive API to Get Leads in PHP | Endgrate",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://developers.apideck.com/apis/crm/pipedrive/configuration",
+   "title": "Pipedrive configuration - Apideck",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Request a Pipedrive Developer Sandbox Account",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s2",
+    "label": "Create a Draft OAuth Application",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s3",
+    "label": "Configure OAuth Access Scopes and Retrieve Client Credentials",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 10,
+    "max_minutes": 20
+   },
+   {
+    "step_id": "s4",
+    "label": "Implement OAuth 2.0 Flow and Token Refresh Handler",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s5",
+    "label": "Install and Test Draft App in Sandbox",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 15,
+    "max_minutes": 30
+   },
+   {
+    "step_id": "s6",
+    "label": "Prepare Marketplace Listing and Documentation",
+    "owner": "agent",
+    "phase": "submit",
+    "min_minutes": 30,
+    "max_minutes": 60
+   },
+   {
+    "step_id": "s7",
+    "label": "Submit App for Marketplace Review",
+    "owner": "you",
+    "phase": "submit",
+    "min_minutes": 5,
+    "max_minutes": 15
+   },
+   {
+    "step_id": "s8",
+    "label": "Wait for Pipedrive Review and Approval",
+    "owner": "provider",
+    "phase": "review",
+    "min_minutes": 1440,
+    "max_minutes": 30240
+   },
+   {
+    "step_id": "s9",
+    "label": "Publish App Live",
+    "owner": "you",
+    "phase": "launch",
+    "min_minutes": 5,
+    "max_minutes": 10
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 90,
+   "max_minutes": 190
+  },
+  "waiting": {
+   "min_minutes": 1440,
+   "max_minutes": 30240
+  },
+  "agent_share": 0.58
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 17,
+   "reported": 3,
+   "inferred": 5
+  },
+  "confidence": "medium",
+  "unverified": [
+   "Short Token Lifetimes",
+   "Pipedrive Developer Sandbox Account",
+   "Implement OAuth 2.0 Flow and Token Refresh Handler",
+   "Short Token Expiration Period",
+   "App rejection during Marketplace review due to scope creep"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:42:34+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "Pipedrive API OAuth 2.0 register developer app credentials",
+   "Pipedrive OAuth app review approval requirements production access",
+   "Pipedrive developer app approval how long review rejected",
+   "Pipedrive API scopes verification requirements developer policy",
+   "Pipedrive app review process how long it takes extended quota production access",
+   "Pipedrive app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}

@@ -1,0 +1,458 @@
+{
+ "summary": "Registering an OAuth application with Beeminder is an instant, self-serve process requiring only an application name and a redirect URL. The primary consideration is ensuring API calls use canonical HTTPS URLs and exact redirect URI matching to prevent dropped parameters.",
+ "difficulty": {
+  "level": "easy",
+  "headline": "Beeminder provides immediate, self-serve OAuth app registration without requiring manual review or developer approval.",
+  "factors": [
+   {
+    "label": "Self-Serve Instant Access",
+    "detail": "OAuth applications can be registered instantly on the web without any developer application wait time or manual approval process.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S1"
+     ],
+     "quote": "Register your app at beeminder.com/apps/new.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Minimal App Requirements",
+    "detail": "Creating an application only requires providing an Application Name and a Redirect URL.",
+    "severity": "low",
+    "evidence": {
+     "source_ids": [
+      "S1"
+     ],
+     "quote": "Application name and redirect URL are required.",
+     "level": "documented"
+    }
+   },
+   {
+    "label": "Strict Redirect URI Matching",
+    "detail": "Authorization requests fail if the redirect_uri parameter does not exactly match the registered redirect URL.",
+    "severity": "medium",
+    "evidence": {
+     "source_ids": [
+      "S1"
+     ],
+     "quote": "This must match the redirect URL you supplied when you registered your app above.",
+     "level": "documented"
+    }
+   }
+  ]
+ },
+ "can_test_before_approval": {
+  "answer": "yes",
+  "detail": "Developers can register an app instantly at beeminder.com/apps/new and test OAuth authorization and API endpoints immediately without waiting for review or approval.",
+  "evidence": {
+   "source_ids": [
+    "S1"
+   ],
+   "quote": "Register your app at beeminder.com/apps/new.",
+   "level": "documented"
+  }
+ },
+ "requirements": [
+  {
+   "label": "Beeminder User Account",
+   "detail": "An active account on Beeminder is required to register and manage OAuth apps.",
+   "required": true,
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "label": "Application Name",
+   "detail": "A unique identifier name for the OAuth application.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Application name and redirect URL are required.",
+    "level": "documented"
+   }
+  },
+  {
+   "label": "Redirect URL",
+   "detail": "The callback URL where users will be sent with their access_token and username upon authorizing the app.",
+   "required": true,
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The redirect URL is where the user is sent after authorizing your app.",
+    "level": "documented"
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "title": "Log into your Beeminder account",
+   "detail": "Sign in to your account on Beeminder to access developer settings and application registration.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 1.0,
+    "high": 3.0,
+    "unit": "minutes"
+   },
+   "link": "https://www.beeminder.com/users/sign_in",
+   "agent_assist": null,
+   "evidence": {
+    "source_ids": [],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s2",
+   "title": "Prepare application settings and redirect URI",
+   "detail": "Determine the application name and exact callback URI to handle the OAuth authentication redirect.",
+   "owner": "agent",
+   "phase": "setup",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft the application name and prepare the exact callback URL structure (e.g., https://yourdomain.com/auth/beeminder/callback) for registration.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Application name and redirect URL are required.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s3",
+   "title": "Register the app on Beeminder",
+   "detail": "Navigate to the app registration page at beeminder.com/apps/new, fill in your app name and redirect URL, and submit.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 2.0,
+    "high": 5.0,
+    "unit": "minutes"
+   },
+   "link": "https://www.beeminder.com/apps/new",
+   "agent_assist": "Provide exact application parameters to paste into the form fields at beeminder.com/apps/new.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "Register your app at beeminder.com/apps/new.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s4",
+   "title": "Retrieve client_id from registered apps list",
+   "detail": "Access beeminder.com/apps to retrieve your application's client_id for use in authorization requests.",
+   "owner": "you",
+   "phase": "setup",
+   "duration": {
+    "low": 1.0,
+    "high": 2.0,
+    "unit": "minutes"
+   },
+   "link": "https://www.beeminder.com/apps",
+   "agent_assist": "Prepare application configuration files or environment variable templates to store the client_id securely.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  },
+  {
+   "id": "s5",
+   "title": "Construct authorization URL for user authentication",
+   "detail": "Build the OAuth authorization endpoint URL containing client_id, URL-encoded redirect_uri, and response_type set to token.",
+   "owner": "agent",
+   "phase": "launch",
+   "duration": {
+    "low": 5.0,
+    "high": 10.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Generate authorization request URL formatted as https://www.beeminder.com/apps/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=token.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The base URL is the same for all apps: https://www.beeminder.com/apps/authorize.",
+    "level": "documented"
+   }
+  },
+  {
+   "id": "s6",
+   "title": "Receive and store user access tokens",
+   "detail": "Implement server or client handling to extract access_token and username from query parameters when Beeminder redirects the user back.",
+   "owner": "agent",
+   "phase": "launch",
+   "duration": {
+    "low": 10.0,
+    "high": 20.0,
+    "unit": "minutes"
+   },
+   "link": null,
+   "agent_assist": "Draft authorization callback code to parse GET query parameters access_token and username and associate them with your user's account.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "After the user authorizes your application they'll be redirected to the redirect_uri that you specified, with two additional parameters, access_token and username, in the query string.",
+    "level": "documented"
+   }
+  }
+ ],
+ "gotchas": [
+  {
+   "title": "POST Parameters Stripped on HTTP or Missing-www Requests",
+   "detail": "Beeminder redirects HTTP or non-www requests to canonical HTTPS URLs, but strips POST parameters during the redirect, causing opaque API failures.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "We redirect insecure and non www requests to the canonical Beeminder URL, but do not forward parameters for POST requests",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Redirect URI Mismatch",
+   "detail": "The redirect_uri query parameter in authorization requests must be URL-encoded and match the exact string registered in your app settings.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "This must match the redirect URL you supplied when you registered your app above.",
+    "level": "documented"
+   }
+  },
+  {
+   "title": "Incorrect Canonical API Base URL",
+   "detail": "All API endpoints require the full canonical HTTPS base URL with the www subdomain included.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "The base URL for all requests is https://www.beeminder.com/api/v1/.",
+    "level": "documented"
+   }
+  }
+ ],
+ "blockers": [
+  {
+   "problem": "POST requests to Beeminder fail silently or return error responses",
+   "why": "Using insecure HTTP or omitting the www subdomain triggers a 301/302 redirect that drops request parameters.",
+   "fix": "Ensure all API requests explicitly target https://www.beeminder.com/api/v1/ as the base URL.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "We redirect insecure and non www requests to the canonical Beeminder URL, but do not forward parameters for POST requests",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Users encounter an error when redirected to Beeminder's authorization screen",
+   "why": "The redirect_uri provided in the authorization request does not match the URI registered at beeminder.com/apps/new.",
+   "fix": "Verify that special characters in redirect_uri are percent-encoded and match the registered app redirect URL exactly.",
+   "evidence": {
+    "source_ids": [
+     "S1"
+    ],
+    "quote": "This must match the redirect URL you supplied when you registered your app above.",
+    "level": "documented"
+   }
+  },
+  {
+   "problem": "Compromised personal auth token during local development",
+   "why": "A personal authentication token was checked into source control or exposed publicly.",
+   "fix": "Regenerate the token immediately via Account Settings > Apps & API to invalidate the compromised token.",
+   "evidence": {
+    "source_ids": [
+     "S9"
+    ],
+    "quote": null,
+    "level": "inferred"
+   }
+  }
+ ],
+ "uncertain": [
+  "Official rate limits for API requests are not stated in the documentation.",
+  "Access token expiration timelines and refresh token mechanisms are not specified."
+ ],
+ "slug": "beeminder",
+ "app_name": "Beeminder",
+ "domain": "beeminder.com",
+ "composio": {
+  "status": "byo",
+  "name": "Beeminder",
+  "slug": "BEEMINDER",
+  "related": [],
+  "snapshot_date": "2026-11-06T18:41:45+00:00"
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "url": "http://api.beeminder.com",
+   "title": "Beeminder API Reference",
+   "kind": "official"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.beeminder.com/terms",
+   "title": "terms of service – beeminder",
+   "kind": "official"
+  },
+  {
+   "id": "S3",
+   "url": "https://api.beeminder.com?ref=danmackinlay.name",
+   "title": "Beeminder API Reference",
+   "kind": "official"
+  },
+  {
+   "id": "S4",
+   "url": "https://changelog.beeminder.com",
+   "title": "Beeminder Changelog",
+   "kind": "official"
+  },
+  {
+   "id": "S5",
+   "url": "https://help.beeminder.com/article/110-apps-and-api",
+   "title": "Apps & API - Beeminder Help",
+   "kind": "official"
+  },
+  {
+   "id": "S6",
+   "url": "https://blog.beeminder.com/tags/akrasia",
+   "title": "Tag: akrasia | Beeminder Blog",
+   "kind": "official"
+  },
+  {
+   "id": "S7",
+   "url": "https://blog.beeminder.com/timestream",
+   "title": "Time Stream ♥ Beeminder: A New App by a Long-Time Beeminder User | Beeminder Blog",
+   "kind": "official"
+  },
+  {
+   "id": "S8",
+   "url": "https://blog.beeminder.com/tags/bee-all",
+   "title": "Tag: bee-all | Beeminder Blog",
+   "kind": "official"
+  },
+  {
+   "id": "S9",
+   "url": "https://forum.beeminder.com/t/advent-2022-11-a-simple-introduction-to-beeminders-api/10662",
+   "title": "Advent 2022: 11. A Simple Introduction to Beeminder's API - Akrasia - Beeminder Forum",
+   "kind": "community"
+  },
+  {
+   "id": "S10",
+   "url": "https://tavily.com/knowledge/company/f86NtlQGZhfg",
+   "title": "Beeminder",
+   "kind": "community"
+  }
+ ],
+ "timeline": {
+  "segments": [
+   {
+    "step_id": "s1",
+    "label": "Log into your Beeminder account",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 1,
+    "max_minutes": 3
+   },
+   {
+    "step_id": "s2",
+    "label": "Prepare application settings and redirect URI",
+    "owner": "agent",
+    "phase": "setup",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s3",
+    "label": "Register the app on Beeminder",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 2,
+    "max_minutes": 5
+   },
+   {
+    "step_id": "s4",
+    "label": "Retrieve client_id from registered apps list",
+    "owner": "you",
+    "phase": "setup",
+    "min_minutes": 1,
+    "max_minutes": 2
+   },
+   {
+    "step_id": "s5",
+    "label": "Construct authorization URL for user authentication",
+    "owner": "agent",
+    "phase": "launch",
+    "min_minutes": 5,
+    "max_minutes": 10
+   },
+   {
+    "step_id": "s6",
+    "label": "Receive and store user access tokens",
+    "owner": "agent",
+    "phase": "launch",
+    "min_minutes": 10,
+    "max_minutes": 20
+   }
+  ],
+  "hands_on": {
+   "min_minutes": 24,
+   "max_minutes": 50
+  },
+  "waiting": {
+   "min_minutes": 0,
+   "max_minutes": 0
+  },
+  "agent_share": 0.8
+ },
+ "stats": {
+  "counts": {
+   "tested": 0,
+   "documented": 15,
+   "reported": 0,
+   "inferred": 4
+  },
+  "confidence": "high",
+  "unverified": [
+   "Beeminder User Account",
+   "Log into your Beeminder account",
+   "Retrieve client_id from registered apps list",
+   "Compromised personal auth token during local development"
+  ]
+ },
+ "meta": {
+  "researched_at": "2026-11-07T09:38:20+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "queries": [
+   "Beeminder API OAuth 2.0 register developer app credentials",
+   "Beeminder OAuth app review approval requirements production access",
+   "Beeminder developer app approval how long review rejected",
+   "Beeminder API scopes verification requirements developer policy",
+   "Beeminder app review process how long it takes extended quota production access",
+   "Beeminder app registration requirements policy approval"
+  ],
+  "pages_read": 10,
+  "origin": "generated"
+ }
+}
