@@ -17,7 +17,7 @@ _status_cache: tuple[float, dict] | None = None
 _status_lock = asyncio.Lock()
 
 
-@router.get("/health")
+@router.api_route("/health", methods=["GET", "HEAD"])
 async def health() -> dict:
     """Liveness only: cheap, no dependencies. Used to wake the server up."""
     return {"ok": True}
