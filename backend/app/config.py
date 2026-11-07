@@ -132,7 +132,7 @@ def get_settings() -> Settings:
         search_results_per_query=int(_float("SEARCH_RESULTS_PER_QUERY", 5)),
         max_sources=int(_float("MAX_SOURCES", 10)),
         source_char_limit=int(_float("SOURCE_CHAR_LIMIT", 9000)),
-        daily_cap_per_ip=int(_float("DAILY_CAP_PER_IP", 10)),
+        daily_cap_per_ip=int(_float("DAILY_CAP_PER_IP", 5)),
         daily_cap_global=int(_float("DAILY_CAP_GLOBAL", 150)),
         cors_origins=_list("CORS_ORIGINS", "http://localhost:5173"),
     )
