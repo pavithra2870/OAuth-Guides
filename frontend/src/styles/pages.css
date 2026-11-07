@@ -1111,3 +1111,25 @@ tbody tr:last-child td {
     gap: 10px;
   }
 }
+
+.composio-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.composio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warn);
+  flex: none;
+}
+.composio-dot.is-managed {
+  background: var(--ok);
+}

@@ -32,13 +32,11 @@ export default function AppCard({ guide, selected, onToggleCompare, index = 0 })
           </div>
         </dl>
 
-        <p className="app-card-note">
-          {managed ? (
-            <span className="note-managed">Composio-managed: you can skip registration</span>
-          ) : (
-            <span className="muted">{guide.headline}</span>
-          )}
+        <p className="composio-tag">
+          <span className={`composio-dot ${managed ? 'is-managed' : 'is-own'}`} />
+          {managed ? 'Composio-managed: skip registration' : 'Composio can’t: register your own'}
         </p>
+        <p className="app-card-note muted">{guide.headline}</p>
       </Link>
 
       {onToggleCompare && (

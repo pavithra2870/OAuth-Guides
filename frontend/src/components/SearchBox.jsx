@@ -1,6 +1,7 @@
-import { useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLibrary } from '../context/useLibrary.js'
+import { getJSON } from '../lib/api.js'
 import { findExact, matchGuides } from '../lib/library.js'
 import { DifficultyBadge, Favicon } from './Badges.jsx'
 
@@ -14,6 +15,14 @@ export default function SearchBox({ size = 'lg', autoFocus = false }) {
   const [open, setOpen] = useState(false)
   const [cursor, setCursor] = useState(-1)
   const [hint, setHint] = useState('')
+  const [usage, setUsage] = useState(null) // { limit, used, remaining } or null if unknown
+
+  useEffect(() => {
+    const controller = new AbortController()
+    getJSON('/api/usage', { signal: controller.signal }).then(setUsage, () => {})
+    return () => controller.abort()
+  }, [])
+  const outOfResearch = usage !== null && usage.remaining <= 0
 
   const matches = useMemo(() => matchGuides(guides, query), [guides, query])
   const trimmed = query.trim()
@@ -25,6 +34,7 @@ export default function SearchBox({ size = 'lg', autoFocus = false }) {
     if (row?.type === 'guide') return navigate(`/g/${row.g.slug}`)
     if (trimmed.length < 2) return setHint('Type at least 2 characters: an app name or website.')
     const exact = findExact(guides, trimmed)
+    if (!exact && outOfResearch) return setHint(`You've used all ${usage.limit} live researches for today. Browse the library, or come back tomorrow.`)
     return navigate(exact ? `/g/${exact.slug}` : `/research?q=${encodeURIComponent(trimmed)}`)
   }
 
@@ -84,6 +94,19 @@ export default function SearchBox({ size = 'lg', autoFocus = false }) {
 
       {hint && <p className="search-hint">{hint}</p>}
 
+      {usage && (
+        <p className={`search-quota ${outOfResearch ? 'is-out' : ''}`}>
+          <span className="quota-pips" aria-hidden="true">
+            {Array.from({ length: usage.limit }, (_, i) => (
+              <i key={i} className={i < usage.remaining ? 'is-left' : ''} />
+            ))}
+          </span>
+          {outOfResearch
+            ? `All ${usage.limit} live researches used today. The library is still open.`
+            : `${usage.remaining} of ${usage.limit} live researches left today. Library guides are unlimited.`}
+        </p>
+      )}
+
       {open && rows.length > 0 && (
         <ul className="suggest" id={listId} role="listbox">
           {rows.map((row, i) => (
@@ -92,7 +115,7 @@ export default function SearchBox({ size = 'lg', autoFocus = false }) {
               id={`${listId}-${i}`}
               role="option"
               aria-selected={cursor === i}
-              className={`suggest-row ${cursor === i ? 'is-cursor' : ''}`}
+              className={`suggest-row ${cursor === i ? 'is-cursor' : ''} ${row.type === 'research' && outOfResearch ? 'is-disabled' : ''}`}
               onMouseDown={(e) => {
                 e.preventDefault()
                 go(row)
@@ -112,7 +135,9 @@ export default function SearchBox({ size = 'lg', autoFocus = false }) {
                   <span className="suggest-name">
                     Research “{trimmed}” live
                   </span>
-                  <span className="suggest-meta">~30 sec</span>
+                  <span className="suggest-meta">
+                    {outOfResearch ? `Limit reached (${usage.used}/${usage.limit} today)` : usage ? `~30 sec · ${usage.remaining} of ${usage.limit} left today` : '~30 sec'}
+                  </span>
                 </>
               )}
             </li>

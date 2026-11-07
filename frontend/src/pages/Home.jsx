@@ -10,6 +10,11 @@ import { DIFFICULTY, formatRange, totalSpan } from '../lib/format.js'
 import { totalWeight } from '../lib/strip.js'
 
 const FILTERS = ['all', 'easy', 'medium', 'hard', 'gated']
+const COMPOSIO_FILTERS = [
+  { key: 'all', label: 'All' },
+  { key: 'managed', label: 'Managed by Composio' },
+  { key: 'own', label: 'Needs your own app' },
+]
 const SORTS = {
   name: { label: 'A–Z', fn: (a, b) => a.app_name.localeCompare(b.app_name) },
   fastest: { label: 'Fastest', fn: (a, b) => totalSpan(a).max_minutes - totalSpan(b).max_minutes },
@@ -66,7 +71,7 @@ export default function Home() {
   const { hash } = useLocation()
   const [difficulty, setDifficulty] = useState('all')
   const [sort, setSort] = useState('name')
-  const [needsOwnApp, setNeedsOwnApp] = useState(false)
+  const [composio, setComposio] = useState('all')
   const [selected, setSelected] = useState([])
 
   useEffect(() => {
@@ -77,12 +82,17 @@ export default function Home() {
     () =>
       guides
         .filter((g) => difficulty === 'all' || g.difficulty === difficulty)
-        .filter((g) => !needsOwnApp || g.composio !== 'managed')
+        .filter((g) => composio === 'all' || (composio === 'managed') === (g.composio === 'managed'))
         .sort(SORTS[sort].fn),
-    [guides, difficulty, sort, needsOwnApp],
+    [guides, difficulty, sort, composio],
   )
 
   const counts = useMemo(() => Object.fromEntries(FILTERS.map((f) => [f, f === 'all' ? guides.length : guides.filter((g) => g.difficulty === f).length])), [guides])
+
+  const composioCounts = useMemo(() => {
+    const managed = guides.filter((g) => g.composio === 'managed').length
+    return { all: guides.length, managed, own: guides.length - managed }
+  }, [guides])
 
   const toggleCompare = (slug) => setSelected((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug].slice(-4)))
 
@@ -138,10 +148,14 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <label className="check">
-              <input type="checkbox" checked={needsOwnApp} onChange={(e) => setNeedsOwnApp(e.target.checked)} />
-              Needs my own OAuth app
-            </label>
+            <div className="seg-control" role="group" aria-label="Filter by Composio support">
+              {COMPOSIO_FILTERS.map((f) => (
+                <button key={f.key} type="button" className={composio === f.key ? 'is-on' : ''} onClick={() => setComposio(f.key)} aria-pressed={composio === f.key}>
+                  {f.label}
+                  <span>{composioCounts[f.key]}</span>
+                </button>
+              ))}
+            </div>
             <label className="select">
               <span className="label">Sort</span>
               <select value={sort} onChange={(e) => setSort(e.target.value)}>

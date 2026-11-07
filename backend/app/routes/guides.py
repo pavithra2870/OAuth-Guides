@@ -93,6 +93,16 @@ async def resolve_app(q: str) -> dict:
     }
 
 
+@router.get("/usage")
+async def usage(request: Request) -> dict:
+    """How many live researches this visitor has left today (the UI shows it before they try)."""
+    _require_db()
+    settings = get_settings()
+    mine, total = await store.usage_today(_ip_hash(request))
+    left = min(settings.daily_cap_per_ip - mine, settings.daily_cap_global - total)
+    return {"limit": settings.daily_cap_per_ip, "used": mine, "remaining": max(0, left)}
+
+
 @router.post("/generate")
 async def generate(body: GenerateRequest, request: Request):
     """Stream a guide: instantly if cached, otherwise researched live."""

@@ -815,3 +815,35 @@ button.seg:hover {
     box-shadow: 0 0 0 2px transparent;
   }
 }
+
+.suggest-row.is-disabled {
+  opacity: 0.55;
+}
+
+.search-quota {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.search-quota.is-out {
+  color: var(--warn);
+}
+.quota-pips {
+  display: inline-flex;
+  gap: 4px;
+}
+.quota-pips i {
+  width: 14px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.quota-pips i.is-left {
+  background: var(--lavender);
+}
